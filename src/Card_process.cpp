@@ -3,6 +3,8 @@
 #include <ESPNOW_SLAVE.h>
 #include "global_vars.h"
 
+int previous_receive_wheel_condition=0;//用来储存突发事件前小车的运行状态
+
 void enviroment_condition_cards(byte block_buffer[18]){
     if(block_buffer[1]==0x11){
         Serial.println("step on condition card type 1");

@@ -30,10 +30,12 @@ void onDataSent(const uint8_t *mac_addr, esp_now_send_status_t sendStatus)
     Serial.print("send status: ");
     if (sendStatus == 0)
     {
+        connected_with_controller=true;
         Serial.println("send sucess!");
     }
     else
     {
+        connected_with_controller=false;
         Serial.println("fail");
     }
 }
@@ -61,6 +63,8 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
         receive_voice_flag=true;
         receive_voice_condition=received_data.y;
 
+    }else if(*received_data.x=='0'){
+        if(received_data.y==0)connected_with_controller=true;
     }
 
 }
