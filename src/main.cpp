@@ -73,4 +73,5 @@ void loop()
   voice_receive_esp_now_behaviors();
   card_process(rfid_block_buffer);
   Serial_commands();
+  Serial.println("test");
 }
