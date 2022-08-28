@@ -74,4 +74,6 @@ void loop()
   card_process(rfid_block_buffer);
   Serial_commands();
   Serial.println("test");
+  Serial.println("test2");
+  Serial.println("test3");
 }
