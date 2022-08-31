@@ -100,6 +100,7 @@ void setup()
   TFT_func_init();
   xTaskCreate(TFT_TASK, "TFT_TASK", 5000, NULL, 1, NULL);
   xTaskCreate(RFID_TASK, "RFID_TASK", 5000, NULL, 1, NULL);
+
   //
   robot_startUp();
 }
@@ -108,6 +109,7 @@ void loop()
 {
   // esp_now_send(0, (uint8_t *)&test, sizeof(test));//广播
   // esp_now_send(masteraddress, (uint8_t *)&send_data, sizeof(send_data));
+ 
   if (connected_with_controller == true)
   {
     connected_funcs();
