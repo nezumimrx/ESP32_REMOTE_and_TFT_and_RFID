@@ -5,6 +5,8 @@
 #include "blackbg.h"
 
 TFT_eSPI tft = TFT_eSPI(); // Invoke library
+TFT_eSprite sprite = TFT_eSprite(&tft);
+
 File myFile;
 int pixels_length=1408;
 unsigned char RowBmp[1408];//128/8 * 高度
@@ -40,7 +42,8 @@ void IRAM_ATTR DrawBmp(String name)
       {
         RowBmp[i] = myFile.read();
       }
-      tft.drawBitmap(0, 20, RowBmp, 128, 88, TFT_WHITE, TFT_BLACK);
+      sprite.drawBitmap(-10, 10, RowBmp, 128, 88, TFT_WHITE, TFT_BLACK);
+      sprite.pushSprite(0,0);
       myFile.close();
     }
   }
@@ -55,7 +58,10 @@ void TFT_func_init()
 {
   tft.begin(); // Initialise the display
   tft.fillScreen(TFT_BLACK);
+  tft.setRotation(6);
   tft.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
+  sprite.createSprite(128,128);
+
   pinMode(25, OUTPUT);
   digitalWrite(25, HIGH);
   if (!SPIFFS.begin())
