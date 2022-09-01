@@ -106,34 +106,35 @@ void pwm_motion(int a1, int a2, int b1, int b2, int c1, int c2, int d1, int d2) 
 
 void pwm_forward()
 {
-    pwm_motion(255, 0, 255, 0, 255, 0, 255, 0);
+    pwm_motion(motor_speed, 0, motor_speed, 0, motor_speed, 0, motor_speed, 0);
     Serial.println("moving forward");
 }
 void pwm_backward()
 {
-    pwm_motion(0, 255, 0, 255, 0, 255, 0, 255);
+    pwm_motion(0, motor_speed, 0, motor_speed, 0, motor_speed, 0, motor_speed);
     Serial.println("moving backward");
 }
 void pwm_rotate_left()
 {
-    pwm_motion(0, 255, 255, 0, 0, 255, 255, 0);
+    pwm_motion(0, motor_speed, motor_speed, 0, 0, motor_speed, motor_speed, 0);
     Serial.println("turning left");
 }
 void pwm_rotate_right()
 {
-    pwm_motion(255, 0, 0, 255, 255, 0, 0, 255);
+    pwm_motion(motor_speed, 0, 0, motor_speed, motor_speed, 0, 0, motor_speed);
     Serial.println("turning right");
 }
 void mecanum_left()
 {
-    pwm_motion(0, 255, 255, 0, 255, 0, 0, 255);
+    pwm_motion(0, motor_speed, motor_speed, 0, motor_speed, 0, 0, motor_speed);
     Serial.println("mec move left");
 }
 void mecanum_right()
 {
-    pwm_motion(255, 0, 0, 255, 0, 255, 255, 0);
+    pwm_motion(motor_speed, 0, 0, motor_speed, 0, motor_speed, motor_speed, 0);
     Serial.println("mec move right");
 }
+
 
 void pwm_stop()
 {
@@ -159,6 +160,7 @@ void pwm_receive_esp_now_behaviors()
             mecanum_left();
         else if (receive_wheel_condition == 6)
             mecanum_right();
+        
         receive_data_flag = false;
     }
 }

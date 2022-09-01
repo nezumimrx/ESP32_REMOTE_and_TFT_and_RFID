@@ -128,6 +128,7 @@
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash_counters.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/soc/esp32/spiram.h \
  src/global_vars.h \
+ C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src/Preferences.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src/SPIFFS.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/FS/src/FS.h \
  .pio/libdeps/esp32dev/TFT_eSPI/TFT_eSPI.h \

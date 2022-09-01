@@ -194,4 +194,5 @@
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_wifi/include/esp_wifi_crypto_types.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_wifi/include/esp_private/wifi_os_adapter.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_wifi/include/esp_wifi_default.h \
- src/global_vars.h
+ src/global_vars.h \
+ C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src/Preferences.h

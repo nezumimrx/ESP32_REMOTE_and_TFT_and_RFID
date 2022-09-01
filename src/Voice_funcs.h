@@ -4,4 +4,5 @@
 
 void play_voice(int num);
 void voice_receive_esp_now_behaviors();
+void change_volume(int num);
 #endif

@@ -9,7 +9,8 @@
 #include <MFRC522.h>
 #include <SPI.h>
 #include <rfid_funcs.h>
-
+Preferences pref;
+int volume=15;
 const int pwmA1 = 26;
 const int pwmA2 = 27;
 const int pwmB1 = 32;
@@ -31,6 +32,7 @@ boolean connected_with_controller = false; //连没连上控制器
 boolean first_time_play_disconnected_voice=true;//首次运行若未连接控制器则播放未连接语音
 boolean first_time_play_connected_voice=true;//首次运行若已连接控制器则播放连接语音
 int rfid_scan_loop_counter=0;
+int motor_speed=255;
 // Decare TASK 1
 void TFT_TASK(void *parameters)
 {
@@ -100,7 +102,11 @@ void setup()
   TFT_func_init();
   xTaskCreate(TFT_TASK, "TFT_TASK", 5000, NULL, 1, NULL);
   xTaskCreate(RFID_TASK, "RFID_TASK", 5000, NULL, 1, NULL);
-
+  pref.begin("volume",false);//false-write/read true-read only
+  int read_volume = pref.getInt("vol",0);
+  if(read_volume==0)change_volume(volume);
+  else change_volume(read_volume);
+  pref.end();
   //
   robot_startUp();
 }

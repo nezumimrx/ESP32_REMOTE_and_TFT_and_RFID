@@ -14,6 +14,16 @@ void play_voice(int num)
   Serial.write("\r\n");
 }
 
+void change_volume(int num){//0-30音量
+    byte level = lowByte(num);
+    byte changevolume[] = {0x7E, 0x04, 0x31, 0x19, 0x2C, 0xEF};
+    byte confirmbyte= 0x04 ^ 0x31 ^ level;
+    changevolume[3]=level;
+    changevolume[4]=confirmbyte;
+    Serial.write(changevolume,sizeof(changevolume));
+    Serial.write("\r\n");
+}
+
 void voice_receive_esp_now_behaviors(){
     /*voice type 定义
         voice_type=1;//录入动作模块
@@ -81,8 +91,10 @@ void voice_receive_esp_now_behaviors(){
             play_voice(63);
             random_play_num=random(55,57);
         }else if(receive_voice_condition==20){//切换到遥控模式
+            motor_speed=255;
             random_play_num=random(86,88);
         }else if(receive_voice_condition==21){//切换为编程模式
+            motor_speed=125;
             random_play_num=random(88,90);
         }
         play_voice(random_play_num);

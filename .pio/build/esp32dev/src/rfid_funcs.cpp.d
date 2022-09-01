@@ -127,7 +127,9 @@
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash_counters.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/soc/esp32/spiram.h \
- src/global_vars.h src/Voice_funcs.h src/DataBlocks.h \
+ src/global_vars.h \
+ C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src/Preferences.h \
+ src/Voice_funcs.h src/DataBlocks.h \
  .pio/libdeps/esp32dev/MFRC522/src/MFRC522.h \
  .pio/libdeps/esp32dev/MFRC522/src/require_cpp11.h \
  .pio/libdeps/esp32dev/MFRC522/src/deprecated.h \

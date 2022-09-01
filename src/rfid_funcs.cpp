@@ -100,5 +100,12 @@ void Serial_commands()
             int num = c.substring(1).toInt();
             play_voice(num);
         }
+        else if(c.startsWith("V")){
+            int num = c.substring(1).toInt();
+            pref.begin("volume",false);
+            pref.putInt("vol",num);
+            pref.end();
+            change_volume(num);
+        }
     }
 }

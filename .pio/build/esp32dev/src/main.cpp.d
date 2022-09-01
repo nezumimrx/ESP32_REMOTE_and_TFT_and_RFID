@@ -133,18 +133,12 @@
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_wifi/include/esp_private/esp_wifi_types_private.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/esp_interface.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_event/include/esp_event_base.h \
- src/pwm.h src/global_vars.h src/TFT_functions.h src/Voice_funcs.h \
- src/Card_process.h .pio/libdeps/esp32dev/MFRC522/src/MFRC522.h \
+ src/pwm.h src/global_vars.h \
+ C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src/Preferences.h \
+ src/TFT_functions.h src/Voice_funcs.h src/Card_process.h \
+ .pio/libdeps/esp32dev/MFRC522/src/MFRC522.h \
  .pio/libdeps/esp32dev/MFRC522/src/require_cpp11.h \
  .pio/libdeps/esp32dev/MFRC522/src/deprecated.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src/SPI.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-spi.h \
- src/rfid_funcs.h \
- C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/BluetoothSerial/src/BluetoothSerial.h \
- C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/bt/host/bluedroid/api/include/api/esp_gap_bt_api.h \
- C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/bt/host/bluedroid/api/include/api/esp_bt_defs.h \
- C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/bt/host/bluedroid/api/include/api/esp_spp_api.h \
- C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/BluetoothSerial/src/BTScan.h \
- C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/cores/esp32/Print.h \
- C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/BluetoothSerial/src/BTAddress.h \
- C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/BluetoothSerial/src/BTAdvertisedDevice.h
+ src/rfid_funcs.h
