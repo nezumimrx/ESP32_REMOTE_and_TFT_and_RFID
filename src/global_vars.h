@@ -10,5 +10,7 @@ extern boolean connected_with_controller;
 extern boolean first_time_play_voice;
 
 extern int motor_speed;
+extern int full_speed;
+extern int slow_speed;
 extern int volume;
 extern Preferences pref;

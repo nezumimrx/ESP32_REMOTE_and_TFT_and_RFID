@@ -66,8 +66,8 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
     }else if(*received_data.x=='0'){
         if(received_data.y==0)connected_with_controller=true;
     }else if(*received_data.x=='s'){
-        if(received_data.y==0)motor_speed=255;
-        else if(received_data.y==1)motor_speed=125;
+        if(received_data.y==0)motor_speed=full_speed;
+        else if(received_data.y==1)motor_speed=slow_speed;
     }
 
 }

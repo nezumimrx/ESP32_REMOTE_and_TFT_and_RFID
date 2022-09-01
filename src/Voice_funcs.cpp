@@ -91,10 +91,10 @@ void voice_receive_esp_now_behaviors(){
             play_voice(63);
             random_play_num=random(55,57);
         }else if(receive_voice_condition==20){//切换到遥控模式
-            motor_speed=255;
+            motor_speed=full_speed;//速度并不是在发送W协议的时候设置的，而是在一开始切换模式的时候
             random_play_num=random(86,88);
         }else if(receive_voice_condition==21){//切换为编程模式
-            motor_speed=125;
+            motor_speed=slow_speed;//速度并不是在发送W协议的时候设置的，而是在一开始切换模式的时候
             random_play_num=random(88,90);
         }
         play_voice(random_play_num);
