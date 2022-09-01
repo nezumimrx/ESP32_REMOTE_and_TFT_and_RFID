@@ -33,6 +33,8 @@ boolean first_time_play_disconnected_voice=true;//首次运行若未连接控制
 boolean first_time_play_connected_voice=true;//首次运行若已连接控制器则播放连接语音
 int rfid_scan_loop_counter=0;
 int motor_speed=255;
+int full_speed=255;
+int slow_speed=125;
 // Decare TASK 1
 void TFT_TASK(void *parameters)
 {
