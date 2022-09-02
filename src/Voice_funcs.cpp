@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include "global_vars.h"
 
+
+
 void play_voice(int num)
 {
   byte playmusic[] = {0x7E, 0x05, 0x41, 0x00, 0x00, 0x45, 0xEF};
@@ -22,6 +24,14 @@ void change_volume(int num){//0-30音量
     changevolume[4]=confirmbyte;
     Serial.write(changevolume,sizeof(changevolume));
     Serial.write("\r\n");
+}
+
+void volume_read_memory(){
+  pref.begin("volume",false);//false-write/read true-read only
+  int read_volume = pref.getInt("vol",0);//读取nvm存储的音量是多少
+  if(read_volume==0)change_volume(volume);//如果是0，说明没改过设置，默认按0-30的第15档设置
+  else change_volume(read_volume);//如果不是0，那么用户更改过音量设置，按上一次保存的音量运行
+  pref.end();
 }
 
 void voice_receive_esp_now_behaviors(){
@@ -51,8 +61,24 @@ void voice_receive_esp_now_behaviors(){
         }else if(receive_voice_condition==3){//紧急停止
             random_play_num=random(9,12);
         }else if(receive_voice_condition==4){//清除所有指令
+            face_condition=1;
+            symbol_counter=0;
+            current_symbol=0;
+            for(int i=0;i<20;i++)symbol_array[i]=0;
             random_play_num=random(12,15);
         }else if(receive_voice_condition==5){//撤销指令
+            if(symbol_counter>=1){
+                symbol_counter--;
+                for(int i=0;i<19;i++){//数组有20个，但是我们最多只寸18个symbol，因此18，19位都是0，再怎么循环到i+1也不会超过数组上限
+                    symbol_array[i]=symbol_array[i+1];
+                }
+                current_symbol=0;//这个很重要，和TFT_drawArrow()的判定条件有关系
+            }
+            if(symbol_counter==0){
+                face_condition=1;
+                symbol_counter=0;
+                for(int i=0;i<20;i++)symbol_array[i]=0;
+            }
             random_play_num=random(15,18);
         }else if(receive_voice_condition==6){//运行指令
             random_play_num=random(18,23);
@@ -92,9 +118,11 @@ void voice_receive_esp_now_behaviors(){
             random_play_num=random(55,57);
         }else if(receive_voice_condition==20){//切换到遥控模式
             motor_speed=full_speed;//速度并不是在发送W协议的时候设置的，而是在一开始切换模式的时候
+            face_condition=0;
             random_play_num=random(86,88);
         }else if(receive_voice_condition==21){//切换为编程模式
             motor_speed=slow_speed;//速度并不是在发送W协议的时候设置的，而是在一开始切换模式的时候
+            face_condition=1;
             random_play_num=random(88,90);
         }
         play_voice(random_play_num);

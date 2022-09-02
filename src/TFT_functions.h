@@ -6,6 +6,8 @@ void TFT_func_init();
 void TFT_func_draw(int start_index, int end_index);
 void TFT_func_draw_blinkeye();
 void TFT_func_draw_lookleftandright();
-
+void TFT_drawArrow();
+void TFT_waitforcode();
+void TFT_usualExpression();
 void DrawBmp(String filename);
 #endif

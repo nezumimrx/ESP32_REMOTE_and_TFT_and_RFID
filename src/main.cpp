@@ -35,20 +35,24 @@ int rfid_scan_loop_counter=0;
 int motor_speed=255;
 int full_speed=255;
 int slow_speed=125;
+
+int face_condition=0;//0-默认脸，1-编程脸
+int current_symbol=0;//0-初始状态，不显示是什么符号，1-前进 2-左转 3-后退 4-右转 5-左平移 6-右平移 7-循环2 8-循环3 9-循环结束 10-条件1开始 11-条件1结束 12-条件2开始 13-条件2结束 14-条件3开始 15-条件3结束
+int symbol_counter=0;
+int symbol_array[20]={0};//记录都有哪些指令应该被显示，上限暂时设置为20
 // Decare TASK 1
 void TFT_TASK(void *parameters)
 {
   for (;;)
   {
-    TFT_func_draw(18, 19);
-    int random_facial_type = 0;
-    random_facial_type = random(1, 10);
-    if (random_facial_type == 1)
-      TFT_func_draw(1, 12);
-    else if (random_facial_type == 2)
-      TFT_func_draw(13, 19);
-    // TFT_func_draw_blinkeye();
-    // TFT_func_draw_lookleftandright();
+    if(face_condition==0){
+      TFT_usualExpression();
+    }else if(face_condition==1){
+      TFT_waitforcode();
+    }else if(face_condition==2){
+      TFT_drawArrow();
+    }
+    
     //  vTaskDelete(NULL);
   }
 }
@@ -104,13 +108,9 @@ void setup()
   TFT_func_init();
   xTaskCreate(TFT_TASK, "TFT_TASK", 5000, NULL, 1, NULL);
   xTaskCreate(RFID_TASK, "RFID_TASK", 5000, NULL, 1, NULL);
-  pref.begin("volume",false);//false-write/read true-read only
-  int read_volume = pref.getInt("vol",0);
-  if(read_volume==0)change_volume(volume);
-  else change_volume(read_volume);
-  pref.end();
+  volume_read_memory();
   //
-  robot_startUp();
+  //robot_startUp();
 }
 
 void loop()
