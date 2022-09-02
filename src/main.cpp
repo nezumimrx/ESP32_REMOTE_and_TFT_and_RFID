@@ -110,7 +110,7 @@ void setup()
   xTaskCreate(RFID_TASK, "RFID_TASK", 5000, NULL, 1, NULL);
   volume_read_memory();
   //
-  //robot_startUp();
+  robot_startUp();
 }
 
 void loop()
