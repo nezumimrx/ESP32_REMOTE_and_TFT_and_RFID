@@ -71,6 +71,13 @@ void rfid_scan_card()
             if(what_rfid_block_to_write==1)write_block_ntag213(data_blocks.condition_type1, 0x06);//写入卡片改这里
             else if(what_rfid_block_to_write==2)write_block_ntag213(data_blocks.condition_type2, 0x06);//写入卡片改这里
             else if(what_rfid_block_to_write==3)write_block_ntag213(data_blocks.condition_type3, 0x06);//写入卡片改这里
+
+            else if(what_rfid_block_to_write==11)write_block_ntag213(data_blocks.trap_card_speedup,0x06);
+            else if(what_rfid_block_to_write==12)write_block_ntag213(data_blocks.trap_card_slowdown,0x06);
+            else if(what_rfid_block_to_write==13)write_block_ntag213(data_blocks.trap_card_turn,0x06);
+            else if(what_rfid_block_to_write==14)write_block_ntag213(data_blocks.trap_card_confuse,0x06);
+            else if(what_rfid_block_to_write==15)write_block_ntag213(data_blocks.trap_card_stop,0x06);
+            else if(what_rfid_block_to_write==10)write_block_ntag213(data_blocks.trap_card_winning,0x06);
         }
     }
 }

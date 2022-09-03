@@ -23,20 +23,19 @@ data_to_recv received_data;
 esp_now_peer_info_t peerInfo;
 void onDataSent(const uint8_t *mac_addr, esp_now_send_status_t sendStatus)
 {
-    char macStr[18]; //显示为FF:FF:FF:FF:FF:FF
-    snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
-             mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
-    Serial.print(macStr);
-    Serial.print("send status: ");
+    //char macStr[18]; //显示为FF:FF:FF:FF:FF:FF
+    //snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
+    //Serial.print(macStr);
+    //Serial.print("send status: ");
     if (sendStatus == 0)
     {
         connected_with_controller=true;
-        Serial.println("send sucess!");
+        //Serial.println("send sucess!");
     }
     else
     {
         connected_with_controller=false;
-        Serial.println("fail");
+        //Serial.println("fail");
     }
 }
 void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
@@ -45,20 +44,20 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
     memcpy(&received_data, incomingData, sizeof(received_data));
     // Serial.print("Bytes received: ");
     // Serial.println(len);
-    Serial.print("x: ");
-    Serial.println(received_data.x);
-    Serial.print("y: ");
-    Serial.println(received_data.y);
-    Serial.println();
+    //Serial.print("x: ");
+    //Serial.println(received_data.x);
+    //Serial.print("y: ");
+    //Serial.println(received_data.y);
+    //Serial.println();
     if(*received_data.x=='W'){
         receive_data_flag=true;
-        if(received_data.y==0)receive_wheel_condition=0;
-        else if(received_data.y==1)receive_wheel_condition=1;
-        else if(received_data.y==2)receive_wheel_condition=2;
-        else if(received_data.y==3)receive_wheel_condition=3;
-        else if(received_data.y==4)receive_wheel_condition=4;
-        else if(received_data.y==5)receive_wheel_condition=5;
-        else if(received_data.y==6)receive_wheel_condition=6;
+        if(received_data.y==0){receive_wheel_condition=0;remote_running=false;}
+        else if(received_data.y==1){receive_wheel_condition=1;remote_running=true;}
+        else if(received_data.y==2){receive_wheel_condition=2;remote_running=true;}
+        else if(received_data.y==3){receive_wheel_condition=3;remote_running=true;}
+        else if(received_data.y==4){receive_wheel_condition=4;remote_running=true;}
+        else if(received_data.y==5){receive_wheel_condition=5;remote_running=true;}
+        else if(received_data.y==6){receive_wheel_condition=6;remote_running=true;}
     }else if(*received_data.x=='v'){
         receive_voice_flag=true;
         receive_voice_condition=received_data.y;

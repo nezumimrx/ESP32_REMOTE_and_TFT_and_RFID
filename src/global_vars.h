@@ -12,6 +12,9 @@ extern boolean first_time_play_voice;
 extern int motor_speed;
 extern int full_speed;
 extern int slow_speed;
+extern int remote_mode_stepped_card_condition;//遥控模式下踩到的卡片种类 0-没有踩到卡，1-踩到加速卡，2踩到减速卡，3踩到掉头卡，4踩到混乱卡，5踩到停顿卡，99-胜利卡
+extern int remote_mode_stepped_card_counter;//踩到卡的计时器，踩到开启，3秒后失效
+extern boolean remote_running;
 extern int volume;
 extern Preferences pref;
 

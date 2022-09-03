@@ -116,7 +116,10 @@ void pwm_backward()
 }
 void pwm_rotate_left()
 {
-    pwm_motion(0, motor_speed, motor_speed, 0, 0, motor_speed, motor_speed, 0);
+    if(motor_speed>=130)
+        pwm_motion(0, motor_speed, motor_speed, 0, 0, motor_speed, motor_speed, 0);
+    else if(motor_speed<130)
+        pwm_motion(0, 125, 125, 0, 0, 125, 125, 0);
     Serial.println("turning left");
 }
 void pwm_rotate_right()
@@ -137,7 +140,10 @@ void mecanum_left()
 }
 void mecanum_right()
 {
-    pwm_motion(motor_speed, 0, 0, motor_speed, 0, motor_speed, motor_speed, 0);
+    if(motor_speed>=130)
+        pwm_motion(motor_speed, 0, 0, motor_speed, 0, motor_speed, motor_speed, 0);
+    else if(motor_speed<130)
+        pwm_motion(125, 0, 0, 125, 0, 125, 125, 0);
     Serial.println("mec move right");
 }
 
@@ -150,6 +156,68 @@ void pwm_stop()
 
 void pwm_receive_esp_now_behaviors()
 {
+    if(face_condition==0){
+        if(remote_mode_stepped_card_condition==1&&remote_mode_stepped_card_counter==0){//加速卡
+            receive_data_flag=true;
+            motor_speed=255;   
+            //哇是加速卡！冲啊！
+        }else if(remote_mode_stepped_card_condition==1&&remote_mode_stepped_card_counter>=60){
+            receive_data_flag=true;
+            motor_speed=175;remote_mode_stepped_card_condition=0;remote_mode_stepped_card_counter=0;
+            //加速结束啦！
+        }
+
+        if(remote_mode_stepped_card_condition==2&&remote_mode_stepped_card_counter==0){//减速卡
+            receive_data_flag=true;
+            motor_speed=90;   
+            //啊！是减速卡，糟糕！
+        }else if(remote_mode_stepped_card_condition==2&&remote_mode_stepped_card_counter>=60){
+            receive_data_flag=true;
+            motor_speed=175;remote_mode_stepped_card_condition=0;remote_mode_stepped_card_counter=0;
+            //终于恢复了！
+        }
+
+        if(remote_mode_stepped_card_condition==3&&remote_mode_stepped_card_counter==0&&remote_running==true){//旋转卡
+            receive_data_flag=true;
+            receive_wheel_condition=random(3,5);
+            remote_mode_stepped_card_condition=0;
+            remote_mode_stepped_card_counter=0;
+            //天哪，是旋转卡！
+        }
+
+        if(remote_mode_stepped_card_condition==4&&remote_mode_stepped_card_counter<=15){//混乱卡
+            receive_data_flag=true;
+            receive_wheel_condition=1;
+            //啊，我感觉好晕，天旋地转的
+        }else if(remote_mode_stepped_card_condition==4&&remote_mode_stepped_card_counter<60&&remote_mode_stepped_card_counter>15){
+            receive_data_flag=true;
+            receive_wheel_condition=random(3,5);
+        }else if(remote_mode_stepped_card_condition==4&&remote_mode_stepped_card_counter>=60){
+            receive_data_flag=true;
+            motor_speed=175;remote_mode_stepped_card_condition=0;remote_mode_stepped_card_counter=0;
+            //我终于恢复了！
+        }
+        if(remote_mode_stepped_card_condition==5&&remote_mode_stepped_card_counter>=0&&remote_mode_stepped_card_counter<60){//陷阱卡
+            receive_data_flag=true;
+            receive_wheel_condition=0;  
+            //糟糕！是陷阱，我不能动了！
+        }else if(remote_mode_stepped_card_condition==5&&remote_mode_stepped_card_counter>=60){
+            receive_data_flag=true;
+            motor_speed=175;remote_mode_stepped_card_condition=0;remote_mode_stepped_card_counter=0;
+            //终于恢复了！
+        }
+
+        if(remote_mode_stepped_card_condition==6&&remote_mode_stepped_card_counter==0&&remote_running==true){//胜利卡
+            //哇我们胜利了！指挥官你真棒！
+            remote_mode_stepped_card_condition=0;
+            remote_mode_stepped_card_counter=0;
+            
+        }
+
+
+
+
+    }
     if (receive_data_flag == true)
     {
         if (receive_wheel_condition == 0)
