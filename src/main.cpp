@@ -32,9 +32,9 @@ boolean connected_with_controller = false; //连没连上控制器
 boolean first_time_play_disconnected_voice=true;//首次运行若未连接控制器则播放未连接语音
 boolean first_time_play_connected_voice=true;//首次运行若已连接控制器则播放连接语音
 int rfid_scan_loop_counter=0;
-int motor_speed=255;
-int full_speed=255;
-int slow_speed=125;
+int motor_speed=175;
+int full_speed=175;
+int slow_speed=100;
 
 int face_condition=0;//0-默认脸，1-编程脸
 int current_symbol=0;//0-初始状态，不显示是什么符号，1-前进 2-左转 3-后退 4-右转 5-左平移 6-右平移 7-循环2 8-循环3 9-循环结束 10-条件1开始 11-条件1结束 12-条件2开始 13-条件2结束 14-条件3开始 15-条件3结束
@@ -61,10 +61,11 @@ void RFID_TASK(void *parameters)
 {
   for (;;)
   {
-
-    rfid_scan_card();
+    pwm_receive_esp_now_behaviors();
+    voice_receive_esp_now_behaviors();
+    
     rfid_scan_loop_counter++;
-    if(rfid_scan_loop_counter==20){rfid_scan_loop_counter=0;send_data_now('0',0);}//每1秒钟检测一次是否连接控制器，更新connected_with_controller
+    if(rfid_scan_loop_counter==100){rfid_scan_loop_counter=0;send_data_now('0',0);}//每1秒钟检测一次是否连接控制器，更新connected_with_controller
     vTaskDelay(50 / portTICK_PERIOD_MS);
   }
 }
@@ -86,6 +87,7 @@ void connected_funcs(){
     play_voice(random_play_num);
     first_time_play_connected_voice=false;
     first_time_play_disconnected_voice=true;
+    for(int i=0;i<20;i++)symbol_array[i]=0;
   }
 }
 void disconnect_funcs(){
@@ -95,6 +97,8 @@ void disconnect_funcs(){
     play_voice(random_play_num);
     first_time_play_disconnected_voice=false;
     first_time_play_connected_voice=true;
+    for(int i=0;i<20;i++)symbol_array[i]=0;
+    face_condition=0;
   }
 }
 
@@ -106,8 +110,8 @@ void setup()
   pwm_init(pwmA1, pwmA2, pwmB1, pwmB2, pwmC1, pwmC2, pwmD1, pwmD2);
   espnow_slave_init();
   TFT_func_init();
-  xTaskCreate(TFT_TASK, "TFT_TASK", 5000, NULL, 1, NULL);
-  xTaskCreate(RFID_TASK, "RFID_TASK", 5000, NULL, 1, NULL);
+  xTaskCreate(TFT_TASK, "TFT_TASK", 10000, NULL, 1, NULL);
+  xTaskCreate(RFID_TASK, "RFID_TASK", 10000, NULL, 1, NULL);
   volume_read_memory();
   //
   robot_startUp();
@@ -121,8 +125,7 @@ void loop()
   if (connected_with_controller == true)
   {
     connected_funcs();
-    pwm_receive_esp_now_behaviors();
-    voice_receive_esp_now_behaviors();
+    rfid_scan_card();
     card_process(rfid_block_buffer);
   }else if(connected_with_controller==false){
     disconnect_funcs();

@@ -67,18 +67,8 @@ void voice_receive_esp_now_behaviors(){
             for(int i=0;i<20;i++)symbol_array[i]=0;
             random_play_num=random(12,15);
         }else if(receive_voice_condition==5){//撤销指令
-            if(symbol_counter>=1){
-                symbol_counter--;
-                for(int i=0;i<19;i++){//数组有20个，但是我们最多只寸18个symbol，因此18，19位都是0，再怎么循环到i+1也不会超过数组上限
-                    symbol_array[i]=symbol_array[i+1];
-                }
-                current_symbol=0;//这个很重要，和TFT_drawArrow()的判定条件有关系
-            }
-            if(symbol_counter==0){
-                face_condition=1;
-                symbol_counter=0;
-                for(int i=0;i<20;i++)symbol_array[i]=0;
-            }
+            current_symbol=0;
+            symbol_counter--;
             random_play_num=random(15,18);
         }else if(receive_voice_condition==6){//运行指令
             random_play_num=random(18,23);
@@ -120,10 +110,12 @@ void voice_receive_esp_now_behaviors(){
             motor_speed=full_speed;//速度并不是在发送W协议的时候设置的，而是在一开始切换模式的时候
             face_condition=0;
             random_play_num=random(86,88);
+            for(int i=0;i<20;i++)symbol_array[i]=0;
         }else if(receive_voice_condition==21){//切换为编程模式
             motor_speed=slow_speed;//速度并不是在发送W协议的时候设置的，而是在一开始切换模式的时候
             face_condition=1;
             random_play_num=random(88,90);
+            for(int i=0;i<20;i++)symbol_array[i]=0;
         }
         play_voice(random_play_num);
         receive_voice_flag=false;

@@ -205,6 +205,16 @@ void TFT_drawArrow()
     //由于current_symbol只在3个地方赋值，一个是clear，一个是收到'F'，一个是delete；收到F时不可能为0，clear时counter是0，因此只有delete会触发这个情况
     sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);//数据该更新了，要刷新黑屏
     sprite.pushSprite(0,0);
+    if(symbol_counter>=1){
+      for(int i=0;i<19;i++){//数组有20个，但是我们最多只寸18个symbol，因此18，19位都是0，再怎么循环到i+1也不会超过数组上限
+        symbol_array[i]=symbol_array[i+1];
+      }
+    }
+    if(symbol_counter<=0){
+      face_condition=1;
+      symbol_counter=0;
+      for(int i=0;i<20;i++)symbol_array[i]=0;
+    }
     for(int i=0;i<18;i++){
       int temp_symbol=symbol_array[i];
       if(temp_symbol!=0)DrawSymbol(30*i,50,temp_symbol);

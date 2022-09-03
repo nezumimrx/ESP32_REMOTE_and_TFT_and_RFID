@@ -121,12 +121,18 @@ void pwm_rotate_left()
 }
 void pwm_rotate_right()
 {
-    pwm_motion(motor_speed, 0, 0, motor_speed, motor_speed, 0, 0, motor_speed);
+    if(motor_speed>=130)
+        pwm_motion(motor_speed, 0, 0, motor_speed, motor_speed, 0, 0, motor_speed);
+    else if(motor_speed<130)
+        pwm_motion(125, 0, 0, 125, 125, 0, 0, 125);
     Serial.println("turning right");
 }
 void mecanum_left()
 {
-    pwm_motion(0, motor_speed, motor_speed, 0, motor_speed, 0, 0, motor_speed);
+    if(motor_speed>=130)
+        pwm_motion(0, motor_speed, motor_speed, 0, motor_speed, 0, 0, motor_speed);
+    else if(motor_speed<130)
+        pwm_motion(0, 125, 125, 0, 125, 0, 0, 125);
     Serial.println("mec move left");
 }
 void mecanum_right()
