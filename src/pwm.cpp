@@ -185,15 +185,17 @@ void pwm_receive_esp_now_behaviors()
             //天哪，是旋转卡！
         }
 
-        if(remote_mode_stepped_card_condition==4&&remote_mode_stepped_card_counter<=15){//混乱卡
+        if(remote_mode_stepped_card_condition==4&&remote_mode_stepped_card_counter<=5){//混乱卡
             receive_data_flag=true;
             receive_wheel_condition=1;
             //啊，我感觉好晕，天旋地转的
-        }else if(remote_mode_stepped_card_condition==4&&remote_mode_stepped_card_counter<60&&remote_mode_stepped_card_counter>15){
+        }else if(remote_mode_stepped_card_condition==4&&remote_mode_stepped_card_counter<60&&remote_mode_stepped_card_counter>5){
             receive_data_flag=true;
+            motor_speed=100;
             receive_wheel_condition=random(3,5);
         }else if(remote_mode_stepped_card_condition==4&&remote_mode_stepped_card_counter>=60){
             receive_data_flag=true;
+            receive_wheel_condition=0;
             motor_speed=175;remote_mode_stepped_card_condition=0;remote_mode_stepped_card_counter=0;
             //我终于恢复了！
         }
@@ -203,10 +205,11 @@ void pwm_receive_esp_now_behaviors()
             //糟糕！是陷阱，我不能动了！
         }else if(remote_mode_stepped_card_condition==5&&remote_mode_stepped_card_counter>=60){
             receive_data_flag=true;
+            
             motor_speed=175;remote_mode_stepped_card_condition=0;remote_mode_stepped_card_counter=0;
             //终于恢复了！
         }
-
+ 
         if(remote_mode_stepped_card_condition==6&&remote_mode_stepped_card_counter==0&&remote_running==true){//胜利卡
             //哇我们胜利了！指挥官你真棒！
             remote_mode_stepped_card_condition=0;
