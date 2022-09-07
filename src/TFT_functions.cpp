@@ -13,7 +13,7 @@ unsigned char RowBmp[1408];   // 128/8 * 高度
 unsigned char SymbolBmp[124]; // 128/8 * 高度
 int previous_face_condition=0;//
 int previous_symbol_counter=0;//
-
+int random_facial_type = 1;
 /*
 在ESP32使用屏幕的时候，要打开TFT_eSPI库里的User_Setup.h把下面几行默认的备注做更改
 #define ILI9341_DRIVER     //这个关上
@@ -46,7 +46,7 @@ void IRAM_ATTR DrawBmp(String name)
       {
         RowBmp[i] = myFile.read();
       }
-      sprite.drawBitmap(-10, 10, RowBmp, 128, 88, TFT_WHITE, TFT_BLACK);
+      sprite.drawBitmap(0, 10, RowBmp, 128, 88, TFT_WHITE, TFT_BLACK);
       sprite.pushSprite(0, 0);
       myFile.close();
     }
@@ -236,6 +236,37 @@ void TFT_waitforcode()
   vTaskDelay(500 / portTICK_PERIOD_MS);
 }
 
+void TFT_eyeblink(int start_index, int end_index)
+{
+  for (int i = start_index; i <= end_index; i++)
+  {
+    String filename = "";
+    filename = "/2blinkeye" + String(i) + ".bmp";
+    DrawBmp(filename);
+    vTaskDelay(10/portTICK_PERIOD_MS);
+  }
+}
+void TFT_wonder(int start_index, int end_index)
+{
+  for (int i = start_index; i <= end_index; i++)
+  {
+    String filename = "";
+    filename = "/5Wonder" + String(i) + ".bmp";
+    DrawBmp(filename);
+    vTaskDelay(10/portTICK_PERIOD_MS);
+  }
+}
+void TFT_usual(String switchbehavior,int start_index, int end_index)
+{
+  //example：2usual10 (1).bmp
+  for (int i = start_index; i <= end_index; i++)
+  {
+    String filename = "";
+    filename = "/2usual" + switchbehavior +" ("+ String(i) + ").bmp";
+    DrawBmp(filename);
+    vTaskDelay(5/portTICK_PERIOD_MS);
+  }
+}
 
 void TFT_usualExpression()
 {
@@ -244,11 +275,52 @@ void TFT_usualExpression()
     sprite.pushSprite(0,0);
     previous_face_condition=0;
   }
-  TFT_func_draw(18, 19);
-  int random_facial_type = 0;
-  random_facial_type = random(1, 10);
-  if (random_facial_type == 1)
-    TFT_func_draw(1, 12);
-  else if (random_facial_type == 2)
-    TFT_func_draw(13, 19);
+  int temp_facial_switch_to = int(random(1,200));
+  if(random_facial_type==1){
+    DrawBmp("/2usual01 (7).bmp");
+    if(temp_facial_switch_to==1){
+      TFT_usual("10",1,7);
+      TFT_usual("01",1,7);
+      random_facial_type=1;
+    }else if(temp_facial_switch_to==2){
+      TFT_usual("10",1,7);
+      TFT_usual("02",1,6);
+      random_facial_type=2;
+    }else if(temp_facial_switch_to==3){
+      TFT_usual("10",1,7);
+      TFT_usual("03",1,6);
+      random_facial_type=3;
+    }
+  }else if(random_facial_type==2){
+    DrawBmp("/2usual02 (6).bmp");
+    if(temp_facial_switch_to==1){
+      TFT_usual("20",1,6);
+      TFT_usual("01",1,7);
+      random_facial_type=1;
+    }else if(temp_facial_switch_to==2){
+      TFT_usual("20",1,6);
+      TFT_usual("02",1,6);
+      random_facial_type=2;
+    }else if(temp_facial_switch_to==3){
+      TFT_usual("20",1,6);
+      TFT_usual("03",1,6);
+      random_facial_type=3;
+    }
+  }else if(random_facial_type==3){
+    DrawBmp("/2usual03 (6).bmp");
+    if(temp_facial_switch_to==1){
+      TFT_usual("30",1,6);
+      TFT_usual("01",1,7);
+      random_facial_type=1;
+    }else if(temp_facial_switch_to==2){
+      TFT_usual("30",1,6);
+      TFT_usual("02",1,6);
+      random_facial_type=2;
+    }else if(temp_facial_switch_to==3){
+      TFT_usual("30",1,6);
+      TFT_usual("03",1,6);
+      random_facial_type=3;
+    }
+  }
+
 }
