@@ -87,7 +87,7 @@ void voice_receive_esp_now_behaviors(){
         }else if(receive_voice_condition==13){//程序运行完毕
             int random_sound_effect=random(78,81);
             play_voice(random_sound_effect);
-            random_play_num=random(41,46);
+            //random_play_num=random(41,46);
         }else if(receive_voice_condition==14){//小车遥控模式跑
             play_voice(63);
             random_play_num=random(46,52);
@@ -109,13 +109,33 @@ void voice_receive_esp_now_behaviors(){
         }else if(receive_voice_condition==20){//切换到遥控模式
             motor_speed=full_speed;//速度并不是在发送W协议的时候设置的，而是在一开始切换模式的时候
             face_condition=0;
+            remote_or_code_mode=0;
             random_play_num=random(86,88);
             for(int i=0;i<20;i++)symbol_array[i]=0;
         }else if(receive_voice_condition==21){//切换为编程模式
             motor_speed=slow_speed;//速度并不是在发送W协议的时候设置的，而是在一开始切换模式的时候
             face_condition=1;
+            remote_or_code_mode=1;
             random_play_num=random(88,90);
             for(int i=0;i<20;i++)symbol_array[i]=0;
+        }else if(receive_voice_condition==22){//加速卡触发
+            random_play_num=random(94,96);
+        }else if(receive_voice_condition==23){//加速卡结束
+            random_play_num=96;
+        }else if(receive_voice_condition==24){//减速触发
+            random_play_num=random(97,99);
+        }else if(receive_voice_condition==25){//旋转卡触发
+            random_play_num=101;
+        }else if(receive_voice_condition==26){//混乱卡
+            random_play_num=random(102,104);
+        }else if(receive_voice_condition==27){//陷阱卡
+            play_voice(104);
+            random_play_num=105;
+        }else if(receive_voice_condition==28){//状态恢复
+            random_play_num=random(99,101);
+        }else if(receive_voice_condition==29){//胜利！
+            play_voice(random(64,67));
+            random_play_num=random(106,109);
         }
         play_voice(random_play_num);
         receive_voice_flag=false;

@@ -43,6 +43,8 @@ int face_condition=0;//0-默认脸，1-编程脸
 int current_symbol=0;//0-初始状态，不显示是什么符号，1-前进 2-左转 3-后退 4-右转 5-左平移 6-右平移 7-循环2 8-循环3 9-循环结束 10-条件1开始 11-条件1结束 12-条件2开始 13-条件2结束 14-条件3开始 15-条件3结束
 int symbol_counter=0;
 int symbol_array[20]={0};//记录都有哪些指令应该被显示，上限暂时设置为20
+
+boolean remote_or_code_mode=0;//0-remote mode 1-code mode
 // Decare TASK 1
 void TFT_TASK(void *parameters)
 {
@@ -54,6 +56,12 @@ void TFT_TASK(void *parameters)
       TFT_waitforcode();
     }else if(face_condition==2){
       TFT_drawArrow();
+    }else if(face_condition==3){
+      TFT_angry();
+    }else if(face_condition==4){
+      TFT_happy();
+    }else if(face_condition==5){
+      TFT_sad();
     }
     
     //  vTaskDelete(NULL);

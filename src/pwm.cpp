@@ -35,6 +35,7 @@ const int pwm_freq = 1000; // 1000hz
 // PWM分辨率，取值为 0-20 之间，这里填写为8，那么后面的ledcWrite
 // 这个里面填写的pwm值就在 0 - 2的8次方 之间 也就是 0-255
 uint8_t pwm_res = 8; //如果是10就是0-1024
+int long_buff_time=100;
 
 void pwm_init(const int PWM_PIN_A1, const int PWM_PIN_A2, const int PWM_PIN_B1, const int PWM_PIN_B2, const int PWM_PIN_C1, const int PWM_PIN_C2, const int PWM_PIN_D1, const int PWM_PIN_D2)
 {
@@ -156,25 +157,37 @@ void pwm_stop()
 
 void pwm_receive_esp_now_behaviors()
 {
-    if(face_condition==0){
+    if(remote_or_code_mode==0){//在遥控模式下
         if(remote_mode_stepped_card_condition==1&&remote_mode_stepped_card_counter==0){//加速卡
             receive_data_flag=true;
             motor_speed=255;   
             //哇是加速卡！冲啊！
-        }else if(remote_mode_stepped_card_condition==1&&remote_mode_stepped_card_counter>=60){
+            receive_voice_flag = true;
+            receive_voice_condition=22;//加速语音
+            face_condition=4;//高兴表情
+        }else if(remote_mode_stepped_card_condition==1&&remote_mode_stepped_card_counter>=long_buff_time){
             receive_data_flag=true;
             motor_speed=175;remote_mode_stepped_card_condition=0;remote_mode_stepped_card_counter=0;
             //加速结束啦！
+            face_condition=0;
+            receive_voice_flag = true;
+            receive_voice_condition=23;//加速结束
         }
 
         if(remote_mode_stepped_card_condition==2&&remote_mode_stepped_card_counter==0){//减速卡
             receive_data_flag=true;
             motor_speed=90;   
             //啊！是减速卡，糟糕！
-        }else if(remote_mode_stepped_card_condition==2&&remote_mode_stepped_card_counter>=60){
+            face_condition=5;
+            receive_voice_flag = true;
+            receive_voice_condition=24;//减速语音
+        }else if(remote_mode_stepped_card_condition==2&&remote_mode_stepped_card_counter>=long_buff_time){
             receive_data_flag=true;
             motor_speed=175;remote_mode_stepped_card_condition=0;remote_mode_stepped_card_counter=0;
             //终于恢复了！
+            face_condition=0;
+            receive_voice_flag = true;
+            receive_voice_condition=28;//恢复
         }
 
         if(remote_mode_stepped_card_condition==3&&remote_mode_stepped_card_counter==0&&remote_running==true){//旋转卡
@@ -183,12 +196,17 @@ void pwm_receive_esp_now_behaviors()
             remote_mode_stepped_card_condition=0;
             remote_mode_stepped_card_counter=0;
             //天哪，是旋转卡！
+            receive_voice_flag = true;
+            receive_voice_condition=25;//旋转
         }
 
         if(remote_mode_stepped_card_condition==4&&remote_mode_stepped_card_counter<=5){//混乱卡
             receive_data_flag=true;
             receive_wheel_condition=1;
             //啊，我感觉好晕，天旋地转的
+            face_condition=5;
+            receive_voice_flag = true;
+            receive_voice_condition=26;
         }else if(remote_mode_stepped_card_condition==4&&remote_mode_stepped_card_counter<60&&remote_mode_stepped_card_counter>5){
             receive_data_flag=true;
             motor_speed=100;
@@ -198,23 +216,33 @@ void pwm_receive_esp_now_behaviors()
             receive_wheel_condition=0;
             motor_speed=175;remote_mode_stepped_card_condition=0;remote_mode_stepped_card_counter=0;
             //我终于恢复了！
+            face_condition=0;
+            receive_voice_flag = true;
+            receive_voice_condition=28;//恢复
         }
-        if(remote_mode_stepped_card_condition==5&&remote_mode_stepped_card_counter>=0&&remote_mode_stepped_card_counter<60){//陷阱卡
+
+        if(remote_mode_stepped_card_condition==5&&remote_mode_stepped_card_counter>=0&&remote_mode_stepped_card_counter<long_buff_time){//陷阱卡
             receive_data_flag=true;
             receive_wheel_condition=0;  
             //糟糕！是陷阱，我不能动了！
-        }else if(remote_mode_stepped_card_condition==5&&remote_mode_stepped_card_counter>=60){
+            face_condition=5;
+            receive_voice_flag = true;
+            receive_voice_condition=27;//陷阱
+        }else if(remote_mode_stepped_card_condition==5&&remote_mode_stepped_card_counter>=long_buff_time){
             receive_data_flag=true;
-            
             motor_speed=175;remote_mode_stepped_card_condition=0;remote_mode_stepped_card_counter=0;
             //终于恢复了！
+            face_condition=0;
+            receive_voice_flag = true;
+            receive_voice_condition=28;//恢复
         }
  
-        if(remote_mode_stepped_card_condition==6&&remote_mode_stepped_card_counter==0&&remote_running==true){//胜利卡
+        if(remote_mode_stepped_card_condition==99&&remote_mode_stepped_card_counter==0&&remote_running==true){//胜利卡
             //哇我们胜利了！指挥官你真棒！
             remote_mode_stepped_card_condition=0;
             remote_mode_stepped_card_counter=0;
-            
+            receive_voice_flag = true;
+            receive_voice_condition=29;//胜利
         }
 
 

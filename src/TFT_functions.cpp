@@ -268,11 +268,128 @@ void TFT_usual(String switchbehavior,int start_index, int end_index)
   }
 }
 
+
+
+void TFT_turn_angry(int start_index, int end_index)
+{
+  //example：2usual10 (1).bmp
+  for (int i = start_index; i <= end_index; i++)
+  {
+    String filename = "";
+    filename = "/4TurnAngry" + String(i) + ".bmp";
+    DrawBmp(filename);
+    vTaskDelay(5/portTICK_PERIOD_MS);
+  }
+}
+void TFT_angry_blink(int start_index, int end_index)
+{
+  //example：2usual10 (1).bmp
+  for (int i = start_index; i <= end_index; i++)
+  {
+    String filename = "";
+    filename = "/4AngryBlink" + String(i) + ".bmp";
+    DrawBmp(filename);
+    vTaskDelay(5/portTICK_PERIOD_MS);
+  }
+}
+
+void TFT_angry(){
+  if(previous_face_condition!=3){
+    sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
+    sprite.pushSprite(0,0);
+    previous_face_condition=3;
+    TFT_turn_angry(1,15);
+  }
+  DrawBmp("/4TurnAngry15.bmp");
+  int temp_facial_switch_to = int(random(1,200));
+  if(temp_facial_switch_to==1){
+    TFT_angry_blink(1,3);
+  }
+}
+
+void TFT_turn_happy(int start_index, int end_index)
+{
+  //example：2usual10 (1).bmp
+  for (int i = start_index; i <= end_index; i++)
+  {
+    String filename = "";
+    filename = "/4TurnHappy" + String(i) + ".bmp";
+    DrawBmp(filename);
+    vTaskDelay(5/portTICK_PERIOD_MS);
+  }
+}
+void TFT_happy_blink(int start_index, int end_index)
+{
+  //example：2usual10 (1).bmp
+  for (int i = start_index; i <= end_index; i++)
+  {
+    String filename = "";
+    filename = "/4HappyBlink" + String(i) + ".bmp";
+    DrawBmp(filename);
+    vTaskDelay(5/portTICK_PERIOD_MS);
+  }
+}
+void TFT_happy(){
+  if(previous_face_condition!=4){
+    sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
+    sprite.pushSprite(0,0);
+    previous_face_condition=4;
+    TFT_turn_happy(1,14);
+  }
+  DrawBmp("/4TurnHappy14.bmp");
+  int temp_facial_switch_to = int(random(1,200));
+  if(temp_facial_switch_to==1){
+    TFT_happy_blink(1,7);
+  }
+}
+
+void TFT_turn_sad(int start_index, int end_index)
+{
+  for (int i = start_index; i <= end_index; i++)
+  {
+    String filename = "";
+    filename = "/4TurnSad" + String(i) + ".bmp";
+    DrawBmp(filename);
+    vTaskDelay(5/portTICK_PERIOD_MS);
+  }
+}
+void TFT_sad_blink(int start_index, int end_index)
+{
+  for (int i = start_index; i <= end_index; i++)
+  {
+    String filename = "";
+    filename = "/4SadBlink" + String(i) + ".bmp";
+    DrawBmp(filename);
+    vTaskDelay(5/portTICK_PERIOD_MS);
+  }
+}
+void TFT_sad(){
+  if(previous_face_condition!=4){
+    sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
+    sprite.pushSprite(0,0);
+    previous_face_condition=4;
+    TFT_turn_sad(1,11);
+  }
+  DrawBmp("/4TurnSad11.bmp");
+  int temp_facial_switch_to = int(random(1,200));
+  if(temp_facial_switch_to==1){
+    TFT_sad_blink(1,7);
+  }
+}
+
 void TFT_usualExpression()
 {
   if(previous_face_condition!=0){
     sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
     sprite.pushSprite(0,0);
+    if(previous_face_condition==3){//之前是生气
+      TFT_angry_blink(1,2);//到眨眼合上眼
+    }else if(previous_face_condition==4){//之前是开心
+      TFT_happy_blink(1,4);//到眨眼合上眼
+    }else if(previous_face_condition==4){//之前是难过
+      TFT_sad_blink(1,4);//到眨眼合上眼
+    }
+    TFT_usual("01",1,7);
     previous_face_condition=0;
   }
   int temp_facial_switch_to = int(random(1,200));
@@ -324,3 +441,4 @@ void TFT_usualExpression()
   }
 
 }
+

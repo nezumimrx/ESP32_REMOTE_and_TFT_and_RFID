@@ -66,7 +66,7 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
     }else if(*received_data.x=='s'){
         if(received_data.y==0)motor_speed=full_speed;
         else if(received_data.y==1)motor_speed=slow_speed;
-    }else if(*received_data.x=='f'){//是哪种表情 //0-默认脸 //1-编程脸
+    }else if(*received_data.x=='f'){//是哪种表情 //0-默认脸 //1-编程脸//2-显示箭头 //3-angry //4-happy //5-sad
         face_condition=received_data.y;
     }else if(*received_data.x=='F'){
         face_condition=2;//记录指令

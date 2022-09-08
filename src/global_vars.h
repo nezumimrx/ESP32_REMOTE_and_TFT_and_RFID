@@ -17,6 +17,7 @@ extern int remote_mode_stepped_card_counter;//踩到卡的计时器，踩到开�
 extern boolean remote_running;
 extern int volume;
 extern Preferences pref;
+extern boolean remote_or_code_mode;
 
 extern int face_condition;
 extern int current_symbol;
