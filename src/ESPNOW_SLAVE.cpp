@@ -3,6 +3,7 @@
 #include <esp_now.h>
 #include <WiFi.h>
 #include <esp_wifi.h>
+#include <CheckCode.h>
 #include "global_vars.h"
 typedef struct data_to_send
 {
@@ -68,10 +69,18 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
         else if(received_data.y==1)motor_speed=slow_speed;
     }else if(*received_data.x=='f'){//是哪种表情 //0-默认脸 //1-编程脸//2-显示箭头 //3-angry //4-happy //5-sad
         face_condition=received_data.y;
-    }else if(*received_data.x=='F'){
+    }else if(*received_data.x=='F'){//接收编程指令 current_symbol 0-要删除上一个指令 1-前进 2-左转 3-后退 4-右转 5-左平移 6-右平移 7-循环2 8-循环3 9-循环结束 10-条件1开始 11-条件1结束 12-条件2开始 13-条件2结束 14-条件3开始 15-条件3结束
         face_condition=2;//记录指令
         current_symbol=received_data.y;
         if(current_symbol!=0)symbol_counter++;
+    }else if(*received_data.x=='R'){
+        if(received_data.y==1){//接收到运行代码指令
+            check_code(code_str_raw);//如果检查没有问题，会将start_cypher变为1
+        }else if(received_data.y==0){//紧急停止
+            instant_stop = 1;
+            start_cypher = 0;
+            
+        }
     }
 
 }
