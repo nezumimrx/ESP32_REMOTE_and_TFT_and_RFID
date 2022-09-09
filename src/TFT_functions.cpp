@@ -180,6 +180,14 @@ void IRAM_ATTR DrawCodingMode(int x, int y, String name)
 }
 
 
+String delete_last_item()
+{
+    String deleted_str = "";
+    int last_delimiter_index = code_str_raw.lastIndexOf(";");
+    deleted_str = code_str_raw.substring(0, last_delimiter_index);
+    Serial.println(deleted_str);
+    return deleted_str;
+}
 
 void TFT_drawArrow()
 {
@@ -188,7 +196,7 @@ void TFT_drawArrow()
     sprite.pushSprite(0,0);
     previous_face_condition=2;
   }
-  if(current_symbol!=0&&previous_symbol_counter!=symbol_counter){
+  if(current_symbol!=0&&previous_symbol_counter!=symbol_counter){//如果接到了有效的编程指令 current_symbol 0-要删除上一个指令 1-前进 2-左转 3-后退 4-右转 5-左平移 6-右平移 7-循环2 8-循环3 9-循环结束 10-条件1开始 11-条件1结束 12-条件2开始 13-条件2结束 14-条件3开始 15-条件3结束
     sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);//数据该更新了，要刷新黑屏
     sprite.pushSprite(0,0);
     
@@ -196,6 +204,23 @@ void TFT_drawArrow()
       symbol_array[i]=symbol_array[i-1];
     }
     symbol_array[0]=current_symbol;//每次新添加的都放到第0位
+    if(current_symbol==1)code_str_raw+=";W1";//在遥控器代码的Button_funcs.cpp里找的到对应的传输协议
+    else if(current_symbol==2)code_str_raw+=";W2";
+    else if(current_symbol==3)code_str_raw+=";W3";
+    else if(current_symbol==4)code_str_raw+=";W4";
+    else if(current_symbol==5)code_str_raw+=";W5";
+    else if(current_symbol==6)code_str_raw+=";W6";
+    else if(current_symbol==7)code_str_raw+=";(2";//在遥控器代码的Card_process.cpp里找的到对应的传输协议，因为遥控器没有循环按钮、条件按钮这些
+    else if(current_symbol==8)code_str_raw+=";(3";
+    else if(current_symbol==9)code_str_raw+=";)";
+    else if(current_symbol==10)code_str_raw+=";{";
+    else if(current_symbol==11)code_str_raw+=";}";
+    else if(current_symbol==12)code_str_raw+=";[";
+    else if(current_symbol==13)code_str_raw+=";]";
+    else if(current_symbol==14)code_str_raw+=";<";
+    else if(current_symbol==15)code_str_raw+=";>";
+    code_str_raw_item_counter++;
+    Serial.println(code_str_raw);
     for(int i=0;i<18;i++){
       int temp_symbol=symbol_array[i];
       if(temp_symbol!=0)DrawSymbol(30*i,50,temp_symbol);//显示symbolX.bmp
@@ -209,11 +234,14 @@ void TFT_drawArrow()
       for(int i=0;i<19;i++){//数组有20个，但是我们最多只寸18个symbol，因此18，19位都是0，再怎么循环到i+1也不会超过数组上限
         symbol_array[i]=symbol_array[i+1];
       }
+      code_str_raw = delete_last_item();
+      code_str_raw_item_counter--;
     }
     if(symbol_counter<=0){
       face_condition=1;
       symbol_counter=0;
       for(int i=0;i<20;i++)symbol_array[i]=0;
+      code_str_raw="&";
     }
     for(int i=0;i<18;i++){
       int temp_symbol=symbol_array[i];

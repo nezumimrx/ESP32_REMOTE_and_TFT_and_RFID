@@ -141,4 +141,4 @@
  .pio/libdeps/esp32dev/MFRC522/src/deprecated.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src/SPI.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-spi.h \
- src/rfid_funcs.h
+ src/rfid_funcs.h src/Code_parse.h

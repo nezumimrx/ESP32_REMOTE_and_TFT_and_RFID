@@ -65,6 +65,7 @@ void voice_receive_esp_now_behaviors(){
             symbol_counter=0;
             current_symbol=0;
             for(int i=0;i<20;i++)symbol_array[i]=0;
+            code_str_raw="&";
             random_play_num=random(12,15);
         }else if(receive_voice_condition==5){//撤销指令
             current_symbol=0;
@@ -112,12 +113,18 @@ void voice_receive_esp_now_behaviors(){
             remote_or_code_mode=0;
             random_play_num=random(86,88);
             for(int i=0;i<20;i++)symbol_array[i]=0;
+            code_str_raw="&";
+            code_str_raw_item_counter=0;
+            code_str_clean = "";
         }else if(receive_voice_condition==21){//切换为编程模式
             motor_speed=slow_speed;//速度并不是在发送W协议的时候设置的，而是在一开始切换模式的时候
             face_condition=1;
             remote_or_code_mode=1;
             random_play_num=random(88,90);
             for(int i=0;i<20;i++)symbol_array[i]=0;
+            code_str_raw="&";
+            code_str_raw_item_counter=0;
+            code_str_clean = "";
         }else if(receive_voice_condition==22){//加速卡触发
             random_play_num=random(94,96);
         }else if(receive_voice_condition==23){//加速卡结束

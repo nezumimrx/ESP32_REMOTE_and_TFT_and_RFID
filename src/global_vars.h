@@ -23,3 +23,26 @@ extern int face_condition;
 extern int current_symbol;
 extern int symbol_counter;//用来记录当前显示的指令数量
 extern int symbol_array[20];//用来储存所有应该被显示的指令
+
+extern String code_str_raw;
+extern String code_str_clean;
+extern int code_str_raw_item_counter;
+extern int code_str_raw_item_max;
+
+extern boolean has_condition_type1;//在存储code_str_condition_type1的同时，将has_condition_type1置为1，没有则为0
+extern boolean receive_condition_type1;//在上位机也就是控制器接收到下位机也就是机器人发来的触发了条件1状况时，置位1，执行完毕置为0
+extern String code_str_condition_type1;//存储type1符号表示的条件语句，type1 目前为{}中的语句
+
+extern boolean has_condition_type2;
+extern boolean receive_condition_type2;//在上位机也就是控制器接收到下位机也就是机器人发来的触发了条件1状况时，置位1，执行完毕置为0
+extern String code_str_condition_type2;//存储type2符号表示的条件语句, type2 目前为[]中的语句
+
+extern boolean has_condition_type3;
+extern boolean receive_condition_type3;//在上位机也就是控制器接收到下位机也就是机器人发来的触发了条件1状况时，置位1，执行完毕置为0
+extern String code_str_condition_type3;//存储type3符号表示的条件语句, type3 目前为||中的语句
+extern boolean instant_stop;
+extern boolean start_cypher;
+
+extern void Code_Process_TASK(void *parameters);
+extern TaskHandle_t Code_Process_Handle;
+

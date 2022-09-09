@@ -13,6 +13,7 @@ void mecanum_left();
 void mecanum_right();
 void pwm_stop();
 void pwm_receive_esp_now_behaviors();
+void pwm_local_process_code_behaviors(int condition);
 #endif
 
 
