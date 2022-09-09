@@ -50,12 +50,9 @@ void enviroment_remotebuff_cards(byte block_buffer[18]){//0-没有踩到卡，1-
     }
 }
 
-void enviroment_remote_motion_cards(byte rfid_block_buffer[18]){
-    
-}
 
 void enviroment_code_story_cards(byte block_buffer[18]){
-
+    
 }
 
 void card_process(byte block_buffer[18])
