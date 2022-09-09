@@ -236,26 +236,8 @@ void TFT_waitforcode()
   vTaskDelay(500 / portTICK_PERIOD_MS);
 }
 
-void TFT_eyeblink(int start_index, int end_index)
-{
-  for (int i = start_index; i <= end_index; i++)
-  {
-    String filename = "";
-    filename = "/2blinkeye" + String(i) + ".bmp";
-    DrawBmp(filename);
-    vTaskDelay(10/portTICK_PERIOD_MS);
-  }
-}
-void TFT_wonder(int start_index, int end_index)
-{
-  for (int i = start_index; i <= end_index; i++)
-  {
-    String filename = "";
-    filename = "/5Wonder" + String(i) + ".bmp";
-    DrawBmp(filename);
-    vTaskDelay(10/portTICK_PERIOD_MS);
-  }
-}
+
+
 void TFT_usual(String switchbehavior,int start_index, int end_index)
 {
   //example：2usual10 (1).bmp

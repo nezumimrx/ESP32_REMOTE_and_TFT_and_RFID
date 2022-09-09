@@ -35,7 +35,9 @@ const int pwm_freq = 1000; // 1000hz
 // PWM分辨率，取值为 0-20 之间，这里填写为8，那么后面的ledcWrite
 // 这个里面填写的pwm值就在 0 - 2的8次方 之间 也就是 0-255
 uint8_t pwm_res = 8; //如果是10就是0-1024
-int long_buff_time=100;
+int long_buff_time=100;//加速、减速、陷阱卡
+int short_buff_time=15;//一般是一次性的行动卡
+int turn_90_degree_cost_time = 5;//这个是旋转90度所用的时间，针对左转卡和右转卡
 
 void pwm_init(const int PWM_PIN_A1, const int PWM_PIN_A2, const int PWM_PIN_B1, const int PWM_PIN_B2, const int PWM_PIN_C1, const int PWM_PIN_C2, const int PWM_PIN_D1, const int PWM_PIN_D2)
 {
@@ -173,7 +175,6 @@ void pwm_receive_esp_now_behaviors()
             receive_voice_flag = true;
             receive_voice_condition=23;//加速结束
         }
-
         if(remote_mode_stepped_card_condition==2&&remote_mode_stepped_card_counter==0){//减速卡
             receive_data_flag=true;
             motor_speed=90;   
@@ -239,16 +240,54 @@ void pwm_receive_esp_now_behaviors()
  
         if(remote_mode_stepped_card_condition==99&&remote_mode_stepped_card_counter==0&&remote_running==true){//胜利卡
             //哇我们胜利了！指挥官你真棒！
+            receive_data_flag=true;
+            receive_wheel_condition=0;  
             remote_mode_stepped_card_condition=0;
             remote_mode_stepped_card_counter=0;
             receive_voice_flag = true;
             receive_voice_condition=29;//胜利
         }
 
+        if(remote_mode_stepped_card_condition==6&&remote_mode_stepped_card_counter>=0&&remote_mode_stepped_card_counter<short_buff_time){//前进卡
+            receive_data_flag=true;
+            receive_wheel_condition=1;
+            motor_speed=100;
 
+        }else if(remote_mode_stepped_card_condition==6&&remote_mode_stepped_card_counter>=short_buff_time){
+            receive_data_flag=true;
+            receive_wheel_condition=0;
+            motor_speed=175;remote_mode_stepped_card_condition=0;remote_mode_stepped_card_counter=0;
+        }
 
+        if(remote_mode_stepped_card_condition==7&&remote_mode_stepped_card_counter>=0&&remote_mode_stepped_card_counter<turn_90_degree_cost_time){//左转卡
+            receive_data_flag=true;
+            receive_wheel_condition=3;
+            motor_speed=155;
+        }else if(remote_mode_stepped_card_condition==7&&remote_mode_stepped_card_counter>=turn_90_degree_cost_time&&remote_mode_stepped_card_counter<=(turn_90_degree_cost_time+short_buff_time)){
+            receive_data_flag=true;
+            receive_wheel_condition=1;
+            motor_speed=100;
+        }else if(remote_mode_stepped_card_condition==7&&remote_mode_stepped_card_counter>(turn_90_degree_cost_time+short_buff_time)){
+            receive_data_flag=true;
+            receive_wheel_condition=0;
+            motor_speed=175;remote_mode_stepped_card_condition=0;remote_mode_stepped_card_counter=0;
+        }
 
+        if(remote_mode_stepped_card_condition==8&&remote_mode_stepped_card_counter>=0&&remote_mode_stepped_card_counter<turn_90_degree_cost_time){//左转卡
+            receive_data_flag=true;
+            receive_wheel_condition=4;
+            motor_speed=155;
+        }else if(remote_mode_stepped_card_condition==8&&remote_mode_stepped_card_counter>=turn_90_degree_cost_time&&remote_mode_stepped_card_counter<=(turn_90_degree_cost_time+short_buff_time)){
+            receive_data_flag=true;
+            receive_wheel_condition=1;
+            motor_speed=100;
+        }else if(remote_mode_stepped_card_condition==8&&remote_mode_stepped_card_counter>(turn_90_degree_cost_time+short_buff_time)){
+            receive_data_flag=true;
+            receive_wheel_condition=0;
+            motor_speed=175;remote_mode_stepped_card_condition=0;remote_mode_stepped_card_counter=0;
+        }
     }
+
     if (receive_data_flag == true)
     {
         if (receive_wheel_condition == 0)

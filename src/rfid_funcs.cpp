@@ -78,6 +78,9 @@ void rfid_scan_card()
             else if(what_rfid_block_to_write==14)write_block_ntag213(data_blocks.trap_card_confuse,0x06);
             else if(what_rfid_block_to_write==15)write_block_ntag213(data_blocks.trap_card_stop,0x06);
             else if(what_rfid_block_to_write==10)write_block_ntag213(data_blocks.trap_card_winning,0x06);
+            else if(what_rfid_block_to_write==16)write_block_ntag213(data_blocks.trap_card_forward,0x06);//forward
+            else if(what_rfid_block_to_write==17)write_block_ntag213(data_blocks.trap_card_left,0x06);//left
+            else if(what_rfid_block_to_write==18)write_block_ntag213(data_blocks.trap_card_right,0x06);//right
         }
     }
 }

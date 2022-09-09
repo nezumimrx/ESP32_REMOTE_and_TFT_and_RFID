@@ -16,6 +16,7 @@ void enviroment_condition_cards(byte block_buffer[18]){
         Serial.println("step on condition card type 3");
         send_data_now('C',3);
     }
+
 }
 
 void enviroment_remotebuff_cards(byte block_buffer[18]){//0-没有踩到卡，1-踩到加速卡，2踩到减速卡，3踩到掉头卡，4踩到混乱卡，5踩到停顿卡，99-胜利卡
@@ -37,7 +38,24 @@ void enviroment_remotebuff_cards(byte block_buffer[18]){//0-没有踩到卡，1-
     }else if(block_buffer[1]==0x01){//胜利卡
         remote_mode_stepped_card_condition=99;
         remote_mode_stepped_card_counter=0;
+    }else if(block_buffer[1]==0x16){//主动前进卡
+        remote_mode_stepped_card_condition=6;
+        remote_mode_stepped_card_counter=0;
+    }else if(block_buffer[1]==0x17){//主动左转卡
+        remote_mode_stepped_card_condition=7;
+        remote_mode_stepped_card_counter=0;
+    }else if(block_buffer[1]==0x18){//主动右转卡
+        remote_mode_stepped_card_condition=8;
+        remote_mode_stepped_card_counter=0;
     }
+}
+
+void enviroment_remote_motion_cards(byte rfid_block_buffer[18]){
+    
+}
+
+void enviroment_code_story_cards(byte block_buffer[18]){
+
 }
 
 void card_process(byte block_buffer[18])
@@ -49,6 +67,8 @@ void card_process(byte block_buffer[18])
             enviroment_condition_cards(block_buffer);
         }else if(block_buffer[0] == 0xC2){
             enviroment_remotebuff_cards(block_buffer);
+        }else if(block_buffer[0] == 0xC3){
+            enviroment_code_story_cards(block_buffer);
         }
         // Serial.println(code_str_raw);
         //发送指令已添加声音

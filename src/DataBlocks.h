@@ -17,6 +17,9 @@ class DataBlocks
     byte trap_card_confuse[2]= {0xC2,0x14};//混乱卡
     byte trap_card_stop[2]={0xC2,0x15};//停顿卡
     byte trap_card_winning[2]= {0xC2,0x01};//胜利卡
+    byte trap_card_forward[2]= {0xC2,0x16};//前进卡
+    byte trap_card_left[2]= {0xC2,0x17};//左转卡
+    byte trap_card_right[2]= {0xC2,0x18};//右转卡
 
 };
 
