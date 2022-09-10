@@ -65,6 +65,8 @@ boolean instant_stop=0;
 boolean start_cypher=0;//先在main里分析代码正确与否再在线程Code_Process_TASK中处理code_parse
 
 TaskHandle_t Code_Process_Handle;
+
+boolean robot_started=false;//初始化完，遥控器的按键才有效
 // Decare TASK 1
 void TFT_TASK(void *parameters)
 {
@@ -139,6 +141,7 @@ void connected_funcs(){
     code_str_raw="&";
     code_str_raw_item_counter=0;
     code_str_clean = "";
+    robot_started=true;//到这里才算初始化完
   }
 }
 void disconnect_funcs(){
@@ -160,16 +163,17 @@ void setup()
 {
   Serial.begin(9600);
   Serial.setTimeout(25);
-  rfid_init();
   pwm_init(pwmA1, pwmA2, pwmB1, pwmB2, pwmC1, pwmC2, pwmD1, pwmD2);
-  espnow_slave_init();
   TFT_func_init();
-  xTaskCreate(TFT_TASK, "TFT_TASK", 10000, NULL, 1, NULL);
+  rfid_init();
+  volume_read_memory();//
+  espnow_slave_init();
   xTaskCreate(RFID_TASK, "RFID_TASK", 10000, NULL, 1, NULL);
   xTaskCreate(Code_Process_TASK, "Code_Process_TASK", 7000, NULL, 2, &Code_Process_Handle);
-  volume_read_memory();
-  //
-  robot_startUp();
+  xTaskCreate(TFT_TASK, "TFT_TASK", 10000, NULL, 1, NULL);
+  //robot_startUp();
+
+  
 }
 
 void loop()

@@ -46,4 +46,4 @@ extern boolean start_cypher;
 extern void Code_Process_TASK(void *parameters);
 extern TaskHandle_t Code_Process_Handle;
 extern boolean if_local_process_code;
-
+extern boolean robot_started;

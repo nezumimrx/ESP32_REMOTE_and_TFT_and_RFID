@@ -141,7 +141,13 @@ void IRAM_ATTR DrawSymbol(int x, int y, int symbol)
       {
         SymbolBmp[i] = myFile.read();
       }
-      sprite.drawBitmap(x, y, SymbolBmp, 30, 30, TFT_WHITE, TFT_BLACK);
+      if(symbol==1)sprite.drawBitmap(x, y, SymbolBmp, 30, 30, TFT_GREEN, TFT_BLACK);//gbr的顺序，而不是RGB -绿
+      else if(symbol==2)sprite.drawBitmap(x, y, SymbolBmp, 30, 30, 0xfd7e ,TFT_BLACK);//红
+      else if(symbol==3)sprite.drawBitmap(x, y, SymbolBmp, 30, 30, TFT_YELLOW, TFT_BLACK);//黄
+      else if(symbol==4)sprite.drawBitmap(x, y, SymbolBmp, 30, 30, TFT_CYAN, TFT_BLACK);//蓝
+      else if(symbol==5)sprite.drawBitmap(x, y, SymbolBmp, 30, 30, 0xad7f, TFT_BLACK);
+      else if(symbol==6)sprite.drawBitmap(x, y, SymbolBmp, 30, 30, 0xf707, TFT_BLACK);
+      else sprite.drawBitmap(x, y, SymbolBmp, 30, 30, TFT_WHITE, TFT_BLACK);
       sprite.pushSprite(0, 0);
       myFile.close();
     }
