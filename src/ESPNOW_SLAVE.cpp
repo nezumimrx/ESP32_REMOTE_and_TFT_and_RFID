@@ -22,6 +22,7 @@ data_to_recv received_data;
 //测试的时候两块板子地址要对调一下，otherguy和myaddress，不然就重复了
 
 esp_now_peer_info_t peerInfo;
+uint8_t symbol_add_or_delete=0;//0-无操作 1-添加 2-删除
 void onDataSent(const uint8_t *mac_addr, esp_now_send_status_t sendStatus)
 {
     //char macStr[18]; //显示为FF:FF:FF:FF:FF:FF
@@ -73,8 +74,9 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
         }else if(*received_data.x=='F'){//接收编程指令 current_symbol 0-要删除上一个指令 1-前进 2-左转 3-后退 4-右转 5-左平移 6-右平移 7-循环2 8-循环3 9-循环结束 10-条件1开始 11-条件1结束 12-条件2开始 13-条件2结束 14-条件3开始 15-条件3结束
             face_condition=2;//记录指令
             current_symbol=received_data.y;
-            if(current_symbol!=0)symbol_counter++;
-            else if(current_symbol==0&&symbol_counter>=1) {symbol_counter--;}
+            
+            if(current_symbol!=0)symbol_add_or_delete=1;
+            else if(current_symbol==0&&symbol_counter>=1) {symbol_add_or_delete=2;}
             
             *received_data.x='0';
         }else if(*received_data.x=='R'){

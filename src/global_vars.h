@@ -23,7 +23,7 @@ extern int face_condition;
 extern int current_symbol;
 extern int symbol_counter;//用来记录当前显示的指令数量
 extern int symbol_array[20];//用来储存所有应该被显示的指令
-
+extern uint8_t symbol_add_or_delete;
 extern String code_str_raw;
 extern String code_str_clean;
 extern int code_str_raw_item_counter;
