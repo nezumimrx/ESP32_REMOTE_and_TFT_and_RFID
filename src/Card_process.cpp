@@ -9,12 +9,21 @@ void enviroment_condition_cards(byte block_buffer[18]){
     if(block_buffer[1]==0x11){
         Serial.println("step on condition card type 1");
         send_data_now('C',1);
+        if(start_cypher==1&&instant_stop==0){
+            receive_condition_type1=true;
+        }
     }else if(block_buffer[1]==0x12){
         Serial.println("step on condition card type 2");
         send_data_now('C',2);
+        if(start_cypher==1&&instant_stop==0){
+            receive_condition_type2=true;
+        }
     }else if(block_buffer[1]==0x13){
         Serial.println("step on condition card type 3");
         send_data_now('C',3);
+        if(start_cypher==1&&instant_stop==0){
+            receive_condition_type3=true;
+        }
     }
 
 }

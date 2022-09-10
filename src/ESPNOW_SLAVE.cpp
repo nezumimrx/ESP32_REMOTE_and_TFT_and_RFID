@@ -79,7 +79,6 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
         }else if(received_data.y==0){//紧急停止
             instant_stop = 1;
             start_cypher = 0;
-            
         }
     }
 

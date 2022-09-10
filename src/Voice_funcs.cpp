@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "global_vars.h"
-
+#include <pwm.h>
 
 
 void play_voice(int num)
@@ -116,6 +116,15 @@ void voice_receive_esp_now_behaviors(){
             code_str_raw="&";
             code_str_raw_item_counter=0;
             code_str_clean = "";
+            //把编程状态下的操作紧急停止且不发声音,不能像再ESPNOW_SLAVE.cpp中那样收到'R',O 把start_cypher=0;以及instant_stop=1;因为这样会让main程序里的部分发声。
+            instant_stop=1;
+            vTaskSuspend(Code_Process_Handle);//先把线程停下来
+            code_str_clean="";//清空执行的程序
+            vTaskResume(Code_Process_Handle);//由于code_str_clean清空以及instant_stop置为1，因此小车必然停下来，再开启线程，空跑完
+            pwm_stop();//然后把车停下来
+            vTaskDelay(100/portTICK_PERIOD_MS);
+            instant_stop=0;
+
         }else if(receive_voice_condition==21){//切换为编程模式
             motor_speed=slow_speed;//速度并不是在发送W协议的时候设置的，而是在一开始切换模式的时候
             face_condition=1;

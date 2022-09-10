@@ -47,6 +47,7 @@ int symbol_counter=0;
 int symbol_array[20]={0};//记录都有哪些指令应该被显示，上限暂时设置为20
 boolean remote_or_code_mode=0;//0-remote mode 1-code mode
 
+
 String code_str_raw="&";//所有添加+=";W1"之类的功能都在TFT_functions.cpp 为什么？因为要和屏幕同步，不然不同步
 String code_str_clean="";
 int code_str_raw_item_counter=0;
@@ -107,8 +108,10 @@ void Code_Process_TASK(void *parameters){
       code_parse(code_str_clean);
       start_cypher=0;
       //play voice mission complete! and emo_mission_complete
-      receive_voice_flag=true;
-      receive_voice_condition=13;
+      if(instant_stop==0){
+        receive_voice_flag=true;
+        receive_voice_condition=13;
+      }
     }
     vTaskDelay(500 / portTICK_PERIOD_MS);
   }
@@ -181,14 +184,14 @@ void loop()
     card_process(rfid_block_buffer);
     if(instant_stop==1){
       vTaskSuspend(Code_Process_Handle);//先把线程停下来
+      code_str_clean="";//清空执行的程序
+      vTaskResume(Code_Process_Handle);//由于code_str_clean清空以及instant_stop置为1，因此小车必然停下来，再开启线程，空跑完
       // play voice emergent stop and play emo_stop
       receive_voice_flag = true;
       receive_voice_condition = 3; //紧急停止
       //
       pwm_stop();//然后把车停下来
       delay(500);
-      code_str_clean="";//清空执行的程序
-      vTaskSuspend(Code_Process_Handle);//由于code_str_clean清空以及instant_stop置为1，因此小车必然停下来，再开启线程，空跑完
       instant_stop=0;
     }
   }else if(connected_with_controller==false){

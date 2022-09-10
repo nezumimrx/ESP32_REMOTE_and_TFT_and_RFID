@@ -202,7 +202,8 @@ void check_code(String code_str_raw_local)
         receive_voice_flag = true;
         receive_voice_condition = 6; //运行、启动、开始执行编程指令
         delay(1000);
-        send_data_now('s', 1); //速度设置为低速
+        //send_data_now('s', 1); //速度设置为低速
+        motor_speed=slow_speed;
         delay(1000);
         //
         instant_stop = 0;
