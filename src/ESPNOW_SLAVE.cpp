@@ -74,6 +74,9 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
             face_condition=2;//记录指令
             current_symbol=received_data.y;
             if(current_symbol!=0)symbol_counter++;
+            else if(current_symbol==0&&symbol_counter>=1) {symbol_counter--;}
+            
+            *received_data.x='0';
         }else if(*received_data.x=='R'){
             if(received_data.y==1){//接收到运行代码指令
                 check_code(code_str_raw);//如果检查没有问题，会将start_cypher变为1

@@ -68,8 +68,8 @@ void voice_receive_esp_now_behaviors(){
             code_str_raw="&";
             random_play_num=random(12,15);
         }else if(receive_voice_condition==5){//撤销指令
-            current_symbol=0;
-            symbol_counter--;
+            // current_symbol=0;
+            // symbol_counter--;这里去掉了，改为发送'F',0是删除
             random_play_num=random(15,18);
         }else if(receive_voice_condition==6){//运行指令
             random_play_num=random(18,23);

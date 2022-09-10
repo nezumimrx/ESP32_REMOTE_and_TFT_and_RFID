@@ -229,10 +229,12 @@ void TFT_drawArrow()
     Serial.println(code_str_raw);
     for(int i=0;i<18;i++){
       int temp_symbol=symbol_array[i];
-      if(temp_symbol!=0)DrawSymbol(30*i,50,temp_symbol);//显示symbolX.bmp
+      if(temp_symbol!=0&&i<4)DrawSymbol(30*i,50,temp_symbol);//显示symbolX.bmp
     }
     previous_symbol_counter=symbol_counter;
-  }else if(current_symbol==0&&previous_symbol_counter!=symbol_counter){
+    receive_voice_condition=1;
+    receive_voice_flag=true;
+  }else if(current_symbol==0&&previous_symbol_counter!=symbol_counter&&symbol_counter>=1){
     //由于current_symbol只在3个地方赋值，一个是clear，一个是收到'F'，一个是delete；收到F时不可能为0，clear时counter是0，因此只有delete会触发这个情况
     sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);//数据该更新了，要刷新黑屏
     sprite.pushSprite(0,0);
@@ -243,17 +245,20 @@ void TFT_drawArrow()
       code_str_raw = delete_last_item();
       code_str_raw_item_counter--;
     }
-    if(symbol_counter<=0){
-      face_condition=1;
-      symbol_counter=0;
-      for(int i=0;i<20;i++)symbol_array[i]=0;
-      code_str_raw="&";
-    }
     for(int i=0;i<18;i++){
       int temp_symbol=symbol_array[i];
-      if(temp_symbol!=0)DrawSymbol(30*i,50,temp_symbol);
+      if(temp_symbol!=0&&i<4)DrawSymbol(30*i,50,temp_symbol);
     }
+    
     previous_symbol_counter=symbol_counter;
+    receive_voice_condition=5;
+    receive_voice_flag=true;
+  }else if(current_symbol==0&&previous_symbol_counter!=symbol_counter&&symbol_counter<1){
+      face_condition=1;
+      symbol_counter=0;
+      previous_symbol_counter=0;
+      for(int i=0;i<20;i++)symbol_array[i]=0;
+      code_str_raw="&";
   }
 }
 
