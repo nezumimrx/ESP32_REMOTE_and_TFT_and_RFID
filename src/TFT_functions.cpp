@@ -201,6 +201,10 @@ void TFT_drawArrow()
     sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
     sprite.pushSprite(0,0);
     previous_face_condition=2;
+    for(int i=0;i<18;i++){
+      int temp_symbol=symbol_array[i];
+      if(temp_symbol!=0&&i<4)DrawSymbol(30*i,50,temp_symbol);//显示symbolX.bmp
+    }
   }
   if(current_symbol!=0&&symbol_add_or_delete==1){//如果接到了有效的编程指令 current_symbol 0-要删除上一个指令 1-前进 2-左转 3-后退 4-右转 5-左平移 6-右平移 7-循环2 8-循环3 9-循环结束 10-条件1开始 11-条件1结束 12-条件2开始 13-条件2结束 14-条件3开始 15-条件3结束
     sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);//数据该更新了，要刷新黑屏
