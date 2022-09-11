@@ -195,10 +195,18 @@ void check_code(String code_str_raw_local)
         legal_test_simple(code_str_condition_type3);
     else if (check_condition_type3_result == 2)
         legal_result = 0; //语法错误
+
+
+
     if (legal_result == 1)
     {
         Serial.println("legal code");
         // play voice run and play emo_ragerthat!
+        flash_emo_counter_handle=true;//开启flash_emo显示时间的计时器
+        flash_emo_counter=0;//flash_emo显示时间计时器清零
+        flash_emo_previous_face_condition=2;//储存一下切换为flash_emo之前是什么表情
+        face_condition=4;//happy
+        
         receive_voice_flag = true;
         receive_voice_condition = 6; //运行、启动、开始执行编程指令
         delay(1000);
@@ -214,6 +222,12 @@ void check_code(String code_str_raw_local)
     {
         Serial.println("illegal code");
         // play voice illegal_code and play emo_question mark!
+        flash_emo_counter_handle=true;//开启flash_emo显示时间的计时器
+        flash_emo_counter=0;//flash_emo显示时间计时器清零
+        flash_emo_previous_face_condition=2;//储存一下切换为flash_emo之前是什么表情
+        face_condition=5;//当前显示表情
+        
+
         receive_voice_flag = true;
         receive_voice_condition = 7; //程序有错误
         //
@@ -222,6 +236,11 @@ void check_code(String code_str_raw_local)
     {
         Serial.println("empty code");
         // play voice empty_code and play emo_silence!
+        flash_emo_counter_handle=true;//开启flash_emo显示时间的计时器
+        flash_emo_counter=0;//flash_emo显示时间计时器清零
+        flash_emo_previous_face_condition=2;//储存一下切换为flash_emo之前是什么表情
+        face_condition=5;
+
         receive_voice_flag = true;
         receive_voice_condition = 8; //没有录入程序指令
         //
@@ -230,6 +249,11 @@ void check_code(String code_str_raw_local)
     {
         Serial.println("oversize code");
         // play voice oversize_code and play emo 一团乱!
+        flash_emo_counter_handle=true;//开启flash_emo显示时间的计时器
+        flash_emo_counter=0;//flash_emo显示时间计时器清零
+        flash_emo_previous_face_condition=2;//储存一下切换为flash_emo之前是什么表情
+        face_condition=5;
+
         receive_voice_flag = true;
         receive_voice_condition = 2; //超出上限
         //

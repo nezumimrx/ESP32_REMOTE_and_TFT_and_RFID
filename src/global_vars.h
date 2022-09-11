@@ -47,3 +47,7 @@ extern void Code_Process_TASK(void *parameters);
 extern TaskHandle_t Code_Process_Handle;
 extern boolean if_local_process_code;
 extern boolean robot_started;
+
+extern boolean flash_emo_counter_handle;
+extern int flash_emo_counter;//在编程模式下临时显示某个表情之后再恢复为箭头的时间
+extern int flash_emo_previous_face_condition;//用来储存在切换为flash_emo之前是什么表情

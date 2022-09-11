@@ -67,6 +67,10 @@ boolean start_cypher=0;//先在main里分析代码正确与否再在线程Code_P
 TaskHandle_t Code_Process_Handle;
 
 boolean robot_started=false;//初始化完，遥控器的按键才有效
+int flash_emo_counter=0;
+boolean flash_emo_counter_handle=false;
+int flash_emo_time_max=60;//因为再RFID_TASK中所以是每50ms +1，那60就是3秒钟，flash_emo_持续3秒
+int flash_emo_previous_face_condition=99;////用来储存在切换为flash_emo之前是什么表情
 // Decare TASK 1
 void TFT_TASK(void *parameters)
 {
@@ -86,6 +90,7 @@ void TFT_TASK(void *parameters)
       TFT_sad();
     }
     
+    
     //  vTaskDelete(NULL);
   }
 }
@@ -100,6 +105,13 @@ void RFID_TASK(void *parameters)
     connection_loop_counter++;
     if(connection_loop_counter==30){connection_loop_counter=0;send_data_now('0',0);}//每1.5秒钟检测一次是否连接控制器，更新connected_with_controller
     if(remote_mode_stepped_card_condition!=0){remote_mode_stepped_card_counter++;}
+    if(flash_emo_counter_handle==true){
+      flash_emo_counter++;
+      if(flash_emo_counter>=60){
+        face_condition=flash_emo_previous_face_condition;
+        flash_emo_counter=0;flash_emo_counter_handle=false;flash_emo_previous_face_condition=99;//变量复位，为了保证下一次flash_emo的运行
+      }
+    }
     vTaskDelay(50 / portTICK_PERIOD_MS);
   }
 }
