@@ -42,7 +42,7 @@ int remote_mode_stepped_card_condition=0;//0-没有踩到卡，1-踩到加速卡
 int remote_mode_stepped_card_counter=0;//踩到卡的计时器，如果踩到，debuff持续3秒，buff持续5秒
 
 int face_condition=0;//0-默认脸，1-编程脸
-int current_symbol=0;//0-初始状态，不显示是什么符号，1-前进 2-左转 3-后退 4-右转 5-左平移 6-右平移 7-循环2 8-循环3 9-循环结束 10-条件1开始 11-条件1结束 12-条件2开始 13-条件2结束 14-条件3开始 15-条件3结束
+int current_symbol=0;//0-初始状态，不显示是什么符号，1-前进 2-左转 3-后退 4-右转 5-左平移 6-右平移 7-循环2 8-循环3 9-循环结束 10-条件1开始 11-条件1结束 12-条件2开始 13-条件2结束 14-条件3开始 15-条件3结束 19-删除
 int symbol_counter=0;
 int symbol_array[20]={0};//记录都有哪些指令应该被显示，上限暂时设置为20
 boolean remote_or_code_mode=0;//0-remote mode 1-code mode
@@ -65,12 +65,17 @@ boolean instant_stop=0;
 boolean start_cypher=0;//先在main里分析代码正确与否再在线程Code_Process_TASK中处理code_parse
 
 TaskHandle_t Code_Process_Handle;
+TaskHandle_t TFT_TASK_Handle;
+boolean TFT_instant_stop=false;
 
 boolean robot_started=false;//初始化完，遥控器的按键才有效
 int flash_emo_counter=0;
 boolean flash_emo_counter_handle=false;
 int flash_emo_time_max=60;//因为再RFID_TASK中所以是每50ms +1，那60就是3秒钟，flash_emo_持续3秒
 int flash_emo_previous_face_condition=99;////用来储存在切换为flash_emo之前是什么表情
+
+int mode_switch_condition;////0-遥控模式, 1 -编程闯关模式，2-编程积分模式
+
 // Decare TASK 1
 void TFT_TASK(void *parameters)
 {
@@ -88,6 +93,8 @@ void TFT_TASK(void *parameters)
       TFT_happy();
     }else if(face_condition==5){
       TFT_sad();
+    }else if(face_condition==6){
+      TFT_venture();
     }
     
     
@@ -182,7 +189,7 @@ void setup()
   espnow_slave_init();
   xTaskCreate(RFID_TASK, "RFID_TASK", 10000, NULL, 1, NULL);
   xTaskCreate(Code_Process_TASK, "Code_Process_TASK", 7000, NULL, 2, &Code_Process_Handle);
-  xTaskCreate(TFT_TASK, "TFT_TASK", 10000, NULL, 1, NULL);
+  xTaskCreate(TFT_TASK, "TFT_TASK", 10000, NULL, 1, &TFT_TASK_Handle);
   //robot_startUp();
 
   

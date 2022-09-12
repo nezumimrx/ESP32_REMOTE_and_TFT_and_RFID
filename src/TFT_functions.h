@@ -12,5 +12,6 @@ void TFT_usualExpression();
 void TFT_angry();
 void TFT_happy();
 void TFT_sad();
+void TFT_venture();
 void DrawBmp(String filename);
 #endif

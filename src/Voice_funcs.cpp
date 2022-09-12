@@ -59,6 +59,7 @@ void voice_receive_esp_now_behaviors(){
         }else if(receive_voice_condition==2){//扫描了新模块但程序数量超出code_str_raw_item_max
             random_play_num=random(5,8);
         }else if(receive_voice_condition==3){//紧急停止
+            play_voice(63);
             random_play_num=random(9,12);
         }else if(receive_voice_condition==4){//清除所有指令
             face_condition=1;
@@ -109,6 +110,9 @@ void voice_receive_esp_now_behaviors(){
             random_play_num=random(55,57);
         }else if(receive_voice_condition==20){//切换到遥控模式
             motor_speed=full_speed;//速度并不是在发送W协议的时候设置的，而是在一开始切换模式的时候
+            vTaskSuspend(TFT_TASK_Handle);
+            TFT_instant_stop=true;
+            vTaskResume(TFT_TASK_Handle);
             face_condition=0;
             remote_or_code_mode=0;
             random_play_num=random(86,88);
@@ -152,6 +156,16 @@ void voice_receive_esp_now_behaviors(){
         }else if(receive_voice_condition==29){//胜利！
             play_voice(random(64,67));
             random_play_num=random(106,109);
+        }else if(receive_voice_condition==30){//切换为生存模式
+            random_play_num=random(109,111);
+            motor_speed=slow_speed;//速度并不是在发送W协议的时候设置的，而是在一开始切换模式的时候
+            face_condition=6;
+            remote_or_code_mode=1;
+            random_play_num=random(109,111);
+            for(int i=0;i<20;i++)symbol_array[i]=0;
+            code_str_raw="&";
+            code_str_raw_item_counter=0;
+            code_str_clean = "";
         }
         play_voice(random_play_num);
         receive_voice_flag=false;

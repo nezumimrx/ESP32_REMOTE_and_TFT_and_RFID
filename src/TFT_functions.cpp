@@ -9,8 +9,9 @@ TFT_eSprite sprite = TFT_eSprite(&tft);
 
 File myFile;
 int pixels_length = 1408;
-unsigned char RowBmp[1408];   // 128/8 * 高度
+//unsigned char RowBmp[1408];   // 128/8 * 高度
 unsigned char SymbolBmp[124]; // 128/8 * 高度
+unsigned char RowBmp128[2048];//
 int previous_face_condition=0;//
 int previous_symbol_counter=0;//
 int random_facial_type = 1;
@@ -44,9 +45,38 @@ void IRAM_ATTR DrawBmp(String name)
       }
       for (int i = 0; i < 1408; i++)
       {
-        RowBmp[i] = myFile.read();
+        RowBmp128[i] = myFile.read();
       }
-      sprite.drawBitmap(0, 10, RowBmp, 128, 88, TFT_WHITE, TFT_BLACK);
+      sprite.drawBitmap(0, 10, RowBmp128, 128, 88, TFT_WHITE, TFT_BLACK);
+      sprite.pushSprite(0, 0);
+      myFile.close();
+    }
+  }
+  else
+  {
+    // Serial.print(F("error opening "));
+    Serial.println(name);
+  }
+}
+
+void IRAM_ATTR DrawBmp128(int x, int y,String name)
+{
+  myFile = SPIFFS.open(name, "r");
+  // Serial.println(name);
+  if (myFile)
+  {
+
+    while (myFile.available())
+    {
+      for (int i = 0; i < 0x3e; i++)
+      {
+        myFile.read();
+      }
+      for (int i = 0; i < 2048; i++)
+      {
+        RowBmp128[i] = myFile.read();
+      }
+      sprite.drawBitmap(x, y, RowBmp128, 128, 128, TFT_WHITE, TFT_BLACK);
       sprite.pushSprite(0, 0);
       myFile.close();
     }
@@ -172,9 +202,9 @@ void IRAM_ATTR DrawCodingMode(int x, int y, String name)
       }
       for (int i = 0; i < 1408; i++)
       {
-        RowBmp[i] = myFile.read();
+        RowBmp128[i] = myFile.read();
       }
-      sprite.drawBitmap(x, y, RowBmp, 128, 88, TFT_BLACK, TFT_WHITE);
+      sprite.drawBitmap(x, y, RowBmp128, 128, 88, TFT_BLACK, TFT_WHITE);
       sprite.pushSprite(0, 0);
       myFile.close();
     }
@@ -206,7 +236,7 @@ void TFT_drawArrow()
       if(temp_symbol!=0&&i<4)DrawSymbol(30*i,50,temp_symbol);//显示symbolX.bmp
     }
   }
-  if(current_symbol!=0&&symbol_add_or_delete==1){//如果接到了有效的编程指令 current_symbol 0-要删除上一个指令 1-前进 2-左转 3-后退 4-右转 5-左平移 6-右平移 7-循环2 8-循环3 9-循环结束 10-条件1开始 11-条件1结束 12-条件2开始 13-条件2结束 14-条件3开始 15-条件3结束
+  if(current_symbol!=19&&current_symbol!=0&&symbol_add_or_delete==1){//如果接到了有效的编程指令 current_symbol 0-要删除上一个指令 1-前进 2-左转 3-后退 4-右转 5-左平移 6-右平移 7-循环2 8-循环3 9-循环结束 10-条件1开始 11-条件1结束 12-条件2开始 13-条件2结束 14-条件3开始 15-条件3结束
     sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);//数据该更新了，要刷新黑屏
     sprite.pushSprite(0,0);
     
@@ -239,7 +269,7 @@ void TFT_drawArrow()
     receive_voice_condition=1;
     receive_voice_flag=true;
     symbol_add_or_delete=0;
-  }else if(current_symbol==0&&symbol_add_or_delete==2&&symbol_counter>=1){
+  }else if(current_symbol==19&&symbol_add_or_delete==2&&symbol_counter>=1){
     //由于current_symbol只在3个地方赋值，一个是clear，一个是收到'F'，一个是delete；收到F时不可能为0，clear时counter是0，因此只有delete会触发这个情况
     sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);//数据该更新了，要刷新黑屏
     sprite.pushSprite(0,0);
@@ -258,7 +288,7 @@ void TFT_drawArrow()
     receive_voice_condition=5;
     receive_voice_flag=true;
     symbol_add_or_delete=0;
-  }else if(current_symbol==0&&symbol_counter<1){
+  }else if(current_symbol==19&&symbol_counter<1){
       face_condition=1;
       symbol_counter=0;
       for(int i=0;i<20;i++)symbol_array[i]=0;
@@ -279,6 +309,33 @@ void TFT_waitforcode()
   vTaskDelay(500 / portTICK_PERIOD_MS);
   DrawCodingMode(0, 20, "/symbolCode2.bmp");
   vTaskDelay(500 / portTICK_PERIOD_MS);
+}
+
+void TFT_venture()
+{
+  if(previous_face_condition!=6){
+    sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
+    sprite.pushSprite(0,0);
+    previous_face_condition=6;
+  }
+
+  for (int i = 1; i <= 20; i++)
+  {
+    if(TFT_instant_stop==false){
+      String filename = "";
+      filename = "/location" + String(i) + ".bmp";
+      DrawBmp128(0,-5,filename);
+      vTaskDelay(50/portTICK_PERIOD_MS);
+    }
+    
+  }
+  
+  DrawBmp128(0,-5,"/location1.bmp");
+  for(int i=0;i<40;i++){
+    if(TFT_instant_stop==false)vTaskDelay(50/portTICK_PERIOD_MS);
+  }
+  
+  TFT_instant_stop=false;
 }
 
 
