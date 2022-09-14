@@ -56,3 +56,17 @@ extern int flash_emo_counter;//在编程模式下临时显示某个表情之后�
 extern int flash_emo_previous_face_condition;//用来储存在切换为flash_emo之前是什么表情
 
 extern int mode_switch_condition;////0-遥控模式, 1 -编程闯关模式，2-编程积分模式
+//这是个神奇的变量，大部分时候运行完start_cypher都有提示音，而有一种情况不需要提示音，那就是在闯关模式下如果踩到了某关的通关卡正准备播放语音，此时，就不需要提示音了，这个变量改为true。而每次恢复是在checkcode完成时
+extern boolean step_on_right_card_when_start_cypher;
+extern int cannot_start_cypher;//0-正常解析 1-编程闯关造成的 2-生存模式造成的
+
+extern boolean survive_mode_intro;
+extern boolean survive_time_counter_start;
+extern boolean survive_start;//这个值的存在是为了保证当切换为mode_switch_condition==2时，用户在没有扫描1号卡片的时候不会受到燃料限制，因为燃料计算只有当扫描了1号卡片才会在check_code中开启
+extern boolean survive_step_on_card;
+
+extern int survive_time_limit;//这个可以改，生存模式可运行时间的最大值，目前是5分钟 300秒 6000tick
+extern int survive_time_counter;
+extern int survive_fuel;//生存模式燃料值
+extern int survive_collected_points;//生存模式积分
+extern boolean TFT_points_refresh;

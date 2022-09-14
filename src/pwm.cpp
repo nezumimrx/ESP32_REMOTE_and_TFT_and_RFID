@@ -95,6 +95,8 @@ void pwm_setduty(uint16_t pin, uint16_t duty)
         ledcWrite(pwmD2_channel, duty);
 }
 
+
+
 void pwm_motion(int a1, int a2, int b1, int b2, int c1, int c2, int d1, int d2) // a1a2-左前，b1b2-右前，c1c2-左后，d1d2-右后
 {
     ledcWrite(pwmA1_channel, a1);

@@ -95,6 +95,14 @@ void TFT_TASK(void *parameters)
       TFT_sad();
     }else if(face_condition==6){
       TFT_venture();
+    }else if(face_condition==7){
+      TFT_win();
+    }else if(face_condition==8){
+      TFT_points();
+    }else if(face_condition==9){
+      TFT_noFuel();
+    }else if(face_condition==10){
+      TFT_noTime();
     }
     
     
@@ -119,6 +127,15 @@ void RFID_TASK(void *parameters)
         flash_emo_counter=0;flash_emo_counter_handle=false;flash_emo_previous_face_condition=99;//变量复位，为了保证下一次flash_emo的运行
       }
     }
+    if(survive_time_counter_start==true){
+      survive_time_counter++;
+      if(survive_time_counter>=survive_time_limit){
+        cannot_start_cypher=3;//时间耗尽，再次收到'R'语音会提示当前时间已耗尽，请回到任务起始位置重新开始
+        receive_voice_flag=true;
+        receive_voice_condition=72;
+        survive_time_counter_start=false;
+      }
+    }
     vTaskDelay(50 / portTICK_PERIOD_MS);
   }
 }
@@ -129,7 +146,7 @@ void Code_Process_TASK(void *parameters){
       code_parse(code_str_clean);
       start_cypher=0;
       //play voice mission complete! and emo_mission_complete
-      if(instant_stop==0){
+      if(instant_stop==0&&step_on_right_card_when_start_cypher==false){
         receive_voice_flag=true;
         receive_voice_condition=13;
       }

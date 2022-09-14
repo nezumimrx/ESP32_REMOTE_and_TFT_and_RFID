@@ -129,4 +129,4 @@
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/soc/esp32/spiram.h \
  src/global_vars.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src/Preferences.h \
- src/pwm.h
+ src/pwm.h src/Code_parse.h

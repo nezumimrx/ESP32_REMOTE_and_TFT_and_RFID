@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "global_vars.h"
 #include <pwm.h>
-
+#include <Code_parse.h>
 
 void play_voice(int num)
 {
@@ -62,7 +62,8 @@ void voice_receive_esp_now_behaviors(){
             play_voice(63);
             random_play_num=random(9,12);
         }else if(receive_voice_condition==4){//清除所有指令
-            face_condition=1;
+            if(mode_switch_condition==1)face_condition=1;
+            else if(mode_switch_condition==2)face_condition=6;
             symbol_counter=0;
             current_symbol=0;
             for(int i=0;i<20;i++)symbol_array[i]=0;
@@ -166,6 +167,87 @@ void voice_receive_esp_now_behaviors(){
             code_str_raw="&";
             code_str_raw_item_counter=0;
             code_str_clean = "";
+        }else if(receive_voice_condition==31){//第1关开始
+            random_play_num=200;
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==32){//第1关结束第2关开始
+            random_play_num=201;
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==33){//第2关结束第3关开始
+            random_play_num=202;
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==34){//第3关结束第4关开始
+            random_play_num=203;
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==35){//第4关结束第5关开始
+            random_play_num=204;
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==36){//第5关结束第6关开始
+            random_play_num=205;
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==37){//第6关结束第7关开始
+            random_play_num=206;
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==38){//第7关结束第8关开始
+            random_play_num=207;
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==39){//第8关结束第9关开始
+            random_play_num=208;
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==40){//第9关结束
+            random_play_num=209;
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==41){//陷阱type1
+            random_play_num=211;//陷阱语音1
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==42){//陷阱type2
+            random_play_num=212;//陷阱语音2
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==43){//陷阱type3
+            random_play_num=213;//陷阱语音3
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==44){//陷阱type4
+            random_play_num=214;//陷阱语音4
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==45){//陷阱type5
+            random_play_num=215;//陷阱语音5
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==50){//从新开始本关
+            random_play_num=random(146,150);
+        }else if(receive_voice_condition==51){//这个任务已经完成了，但是用户再次扫了这个任务卡，对应3播放过故事，且任务完成
+            random_play_num=random(144,146);
+        }else if(receive_voice_condition==52){//上一个任务还没开始，就扫描了下面关卡的任务点，请先完成上一个任务
+            random_play_num=random(142,144);
+        }else if(receive_voice_condition==53){//已经完成了整个任务
+            random_play_num=141;
+        }else if(receive_voice_condition==54){//无法解析代码，机体瘫痪,cannot_start_cypher==1 闯关模式 在ESPNOW中 需要返回任务点维修才能重新开始任务
+            random_play_num=140;
+        }else if(receive_voice_condition==55){//无法解析代码，燃料耗尽,cannot_start_cypher==2 生存模式 在ESPNOW中 需要返回基地补充能量才能开始任务
+            random_play_num=random(138,140);
+        }else if(receive_voice_condition==56){//无法解析代码，燃料耗尽,cannot_start_cypher==3 生存模式 在ESPNOW中触发 时间耗尽
+            random_play_num=random(136,138);
+        }else if(receive_voice_condition==57){//无法解析代码，生存模式已完成 在ESPNOW中触发  时间耗尽
+            random_play_num=random(134,136);
+        }else if(receive_voice_condition==71){
+            random_play_num=220;//生存挑战模式介绍
+        }else if(receive_voice_condition==72){
+            random_play_num=221;//倒计时结束
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==73){
+            random_play_num=222;//提示用户倒计时开始
+        }else if(receive_voice_condition==74){
+            random_play_num=223;//生存挑战完成
+            code_parse_emergent_stop();
+        }else if(receive_voice_condition==75){//1级矿物
+            random_play_num=224;
+        }else if(receive_voice_condition==76){//2级矿物
+            random_play_num=225;
+        }else if(receive_voice_condition==77){//3级矿物
+            random_play_num=226;
+        }else if(receive_voice_condition==78){//4级矿物
+            random_play_num=227;
+        }else if(receive_voice_condition==79){//5级矿物
+            random_play_num=228;
         }
         play_voice(random_play_num);
         receive_voice_flag=false;

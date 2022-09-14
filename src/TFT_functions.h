@@ -13,5 +13,11 @@ void TFT_angry();
 void TFT_happy();
 void TFT_sad();
 void TFT_venture();
+void TFT_win();
+void TFT_points();
+void TFT_noFuel();
+void TFT_noTime();
+void TFT_DrawString(String str, int x, int y);
 void DrawBmp(String filename);
+
 #endif

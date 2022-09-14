@@ -46,11 +46,11 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
     memcpy(&received_data, incomingData, sizeof(received_data));
     // Serial.print("Bytes received: ");
     // Serial.println(len);
-    Serial.print("x: ");
-    Serial.println(received_data.x);
-    Serial.print("y: ");
-    Serial.println(received_data.y);
-    Serial.println();
+    // Serial.print("x: ");
+    // Serial.println(received_data.x);
+    // Serial.print("y: ");
+    // Serial.println(received_data.y);
+    // Serial.println();
     if(robot_started==true){//初始化完成遥控器的按键才有效
         if(*received_data.x=='W'){
             if(mode_switch_condition==0){
@@ -90,13 +90,18 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
             vTaskResume(TFT_TASK_Handle);
             face_condition=2;//记录指令
             current_symbol=received_data.y;
-            if(current_symbol!=0&&current_symbol!=19&&current_symbol!=20)symbol_add_or_delete=1;
-            else if(current_symbol==19&&current_symbol!=20&&symbol_counter>=1) {symbol_add_or_delete=2;}
-            else if(current_symbol==20){receive_voice_flag=true;receive_voice_condition=4;}
+            if(current_symbol!=0&&current_symbol!=19&&current_symbol!=20)symbol_add_or_delete=1;//!=0是因为默认会在W1后面发送W0，所以0不能用
+            else if(current_symbol==19&&current_symbol!=20&&symbol_counter>=1) {symbol_add_or_delete=2;}//删除指令
+            else if(current_symbol==20){receive_voice_flag=true;receive_voice_condition=4;}//清空指令
 
         }else if(*received_data.x=='R'&&(mode_switch_condition==1||mode_switch_condition==2)){
             if(received_data.y==1){//接收到运行代码指令
-                check_code(code_str_raw);//如果检查没有问题，会将start_cypher变为1
+                if(cannot_start_cypher==0)check_code(code_str_raw);//如果检查没有问题，会将start_cypher变为1 cannot_start_cypher == 0 正常解析
+                else if(cannot_start_cypher==1){receive_voice_flag=true;receive_voice_condition=54;}//机体完蛋
+                else if(cannot_start_cypher==2){receive_voice_flag=true;receive_voice_condition=55;}//生存模式，燃料耗尽
+                else if(cannot_start_cypher==3){receive_voice_flag=true;receive_voice_condition=56;}//生存模式，时间耗尽，由RFID_TASK里的tick触发
+                else if(cannot_start_cypher==4){receive_voice_flag=true;receive_voice_condition=57;}//生存模式已通关
+
             }else if(received_data.y==0&&instant_stop==0&&start_cypher==1){//紧急停止
                 instant_stop = 1;
                 start_cypher = 0;
@@ -105,9 +110,9 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
             if(received_data.y==1){//接收到切换模式的指令
                 mode_switch_condition++;
                 if(mode_switch_condition>=3)mode_switch_condition=0;
-                if(mode_switch_condition==0){receive_voice_flag=true;receive_voice_condition=20;}//切换为遥控
-                else if(mode_switch_condition==1){receive_voice_flag=true;receive_voice_condition=21;}//切换为编程
-                else if(mode_switch_condition==2){receive_voice_flag=true;receive_voice_condition=30;}//切换为生存挑战
+                if(mode_switch_condition==0){receive_voice_flag=true;receive_voice_condition=20;cannot_start_cypher=0;}//切换为遥控
+                else if(mode_switch_condition==1){receive_voice_flag=true;receive_voice_condition=21;cannot_start_cypher=0;}//切换为编程
+                else if(mode_switch_condition==2){receive_voice_flag=true;receive_voice_condition=30;survive_mode_intro=false;survive_time_counter=0;survive_fuel=1;survive_collected_points=0;cannot_start_cypher=0;}//切换为生存挑战
             }
         }
     }

@@ -205,17 +205,46 @@ void check_code(String code_str_raw_local)
         flash_emo_counter_handle=true;//开启flash_emo显示时间的计时器
         flash_emo_counter=0;//flash_emo显示时间计时器清零
         flash_emo_previous_face_condition=2;//储存一下切换为flash_emo之前是什么表情
-        face_condition=4;//happy
+        vTaskSuspend(TFT_TASK_Handle);
+        TFT_instant_stop=true;
+        vTaskResume(TFT_TASK_Handle);
         
         receive_voice_flag = true;
         receive_voice_condition = 6; //运行、启动、开始执行编程指令
+        if(mode_switch_condition==2&&survive_time_counter_start==false&&survive_start==true){survive_time_counter_start=true;receive_voice_condition=73;}//在生存模式下，如果第一次接收到了用户的指令，那么就开始5分钟倒计时 语音提示倒计时开始
+        if(mode_switch_condition==2&&survive_time_counter_start==true&&survive_start==true&&survive_fuel>0){//如果在限定时间内，每执行一次程序燃料数-1
+            survive_fuel--;  
+            TFT_points_refresh=true;
+        }else if(mode_switch_condition==2&&survive_time_counter_start==true&&survive_start==true&&survive_fuel<=0){//如果在限定时间内，但是燃料耗尽了
+            survive_start=false;
+            survive_fuel=0;
+            TFT_points_refresh=true;
+            face_condition=5;
+            cannot_start_cypher=2;
+            receive_voice_flag=true;
+            receive_voice_condition=55;//燃料耗尽
+        }
+        if(face_condition!=5)face_condition=4; //虽然看起来多余，但是实际上是因为在生存模式下，燃料耗尽时再显示笑脸就不对了，所以优先判断survive_fuel，如果没油了，那么face_condition就是5sad，其他情况都时笑脸
+        step_on_right_card_when_start_cypher=false;//防止运行完start_cypher发提示音打断故事语音的变量，每次运行start_cypher恢复成false
         delay(1000);
-        //send_data_now('s', 1); //速度设置为低速
         motor_speed=slow_speed;
         delay(1000);
         //
+        
+
         instant_stop = 0;
-        start_cypher = 1;
+        if(cannot_start_cypher==0)start_cypher = 1;//可以解析编程指令时
+        if(start_cypher==1){
+            if(mode_switch_condition==2&&survive_start==true){
+                vTaskSuspend(TFT_TASK_Handle);
+                TFT_instant_stop=true;
+                vTaskResume(TFT_TASK_Handle);
+                face_condition=8;
+                flash_emo_previous_face_condition=8;//储存一下切换为flash_emo之前是什么表情
+            }
+        }
+
+        
         vTaskResume(Code_Process_Handle);
     }
     else if (legal_result == 0)
@@ -225,7 +254,10 @@ void check_code(String code_str_raw_local)
         flash_emo_counter_handle=true;//开启flash_emo显示时间的计时器
         flash_emo_counter=0;//flash_emo显示时间计时器清零
         flash_emo_previous_face_condition=2;//储存一下切换为flash_emo之前是什么表情
-        face_condition=5;//当前显示表情
+        vTaskSuspend(TFT_TASK_Handle);
+        TFT_instant_stop=true;
+        vTaskResume(TFT_TASK_Handle);
+        face_condition=5;
         
 
         receive_voice_flag = true;
@@ -239,6 +271,9 @@ void check_code(String code_str_raw_local)
         flash_emo_counter_handle=true;//开启flash_emo显示时间的计时器
         flash_emo_counter=0;//flash_emo显示时间计时器清零
         flash_emo_previous_face_condition=2;//储存一下切换为flash_emo之前是什么表情
+        vTaskSuspend(TFT_TASK_Handle);
+        TFT_instant_stop=true;
+        vTaskResume(TFT_TASK_Handle);
         face_condition=5;
 
         receive_voice_flag = true;
@@ -252,6 +287,9 @@ void check_code(String code_str_raw_local)
         flash_emo_counter_handle=true;//开启flash_emo显示时间的计时器
         flash_emo_counter=0;//flash_emo显示时间计时器清零
         flash_emo_previous_face_condition=2;//储存一下切换为flash_emo之前是什么表情
+        vTaskSuspend(TFT_TASK_Handle);
+        TFT_instant_stop=true;
+        vTaskResume(TFT_TASK_Handle);
         face_condition=5;
 
         receive_voice_flag = true;

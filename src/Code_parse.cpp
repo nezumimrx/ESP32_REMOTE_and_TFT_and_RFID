@@ -5,6 +5,17 @@
 #include <pwm.h>
 String looptimes_strFormat = ""; //这个looptimes_strFormat由于放在下面开空间的话会出现存不进去数据的情况，所以要放到全局变量中
 boolean processing_condition=false;//当已经在运行一个条件语句程序时，不要踩到再运行一次了
+
+void code_parse_emergent_stop(){
+    instant_stop=1;
+    vTaskSuspend(Code_Process_Handle);//先把线程停下来
+    code_str_clean="";//清空执行的程序
+    vTaskResume(Code_Process_Handle);//由于code_str_clean清空以及instant_stop置为1，因此小车必然停下来，再开启线程，空跑完
+    pwm_stop();//然后把车停下来
+    vTaskDelay(100/portTICK_PERIOD_MS);
+    instant_stop=0;
+}
+
 void process_wheel(String str, int i)
 { // L0-stop L1-forward L2-BACK L3-LEFT L4-RIGHT L5-MECLEFT L6-MECRIGHT 
   // L001 L101 L201 01表示时间
@@ -15,17 +26,21 @@ void process_wheel(String str, int i)
     int delay_time=str.substring(i+2,i+4).toInt();
     //send_data_now('W',move_condition);
     pwm_local_process_code_behaviors(move_condition);
-    delay(500*delay_time);
+    vTaskDelay((500*delay_time)/portTICK_PERIOD_MS);
+    //delay(500*delay_time);
     pwm_local_process_code_behaviors(0);
-    delay(200);
+    vTaskDelay(200/portTICK_PERIOD_MS);
+    //delay(200);
     i=i+3;
   }
   //如果后面没有时间，只是单纯的W1\W2\W3\W4\W5\W6的话，停顿1秒
   else if(next_next_char!='0'){
     pwm_local_process_code_behaviors(move_condition);
-    delay(500);
+    //delay(500);
+    vTaskDelay(500/portTICK_PERIOD_MS);
     pwm_local_process_code_behaviors(0);
-    delay(200);
+    //delay(200);
+    vTaskDelay(200/portTICK_PERIOD_MS);
     i++;
   }
 
@@ -41,13 +56,15 @@ boolean process_D(char next_char, char next_next_char, int i)
     int delay_time = next_char_int * 10 + next_next_char_int;
     Serial.print(F("delay: "));
     Serial.println(delay_time);
-    delay(delay_time * 1000);
+    vTaskDelay((delay_time * 1000)/portTICK_PERIOD_MS);
+    //delay(delay_time * 1000);
     return 1;
   }
   else
   {
     Serial.println("default delay 1 ");
-    delay(1000);
+    //delay(1000);
+    vTaskDelay(1000/portTICK_PERIOD_MS);
     return 0;
   }
 }
@@ -101,7 +118,8 @@ void code_parse(String str)
         //send_data_now('W',0);//先让小车停下来说话
         receive_voice_flag=true;
         receive_voice_condition=15;//第一种环境条件触发
-        delay(4000);//小车停下1.5s处理语音及表情
+        vTaskDelay(4000/portTICK_PERIOD_MS);
+        //delay(4000);//小车停下1.5s处理语音及表情
         //
         processing_condition=true;
         code_parse(code_str_condition_type1);
@@ -115,7 +133,8 @@ void code_parse(String str)
         pwm_local_process_code_behaviors(0);
         receive_voice_flag=true;
         receive_voice_condition=18;//触发了条件但是没有录入对应的条件指令
-        delay(4000);//小车停下1.5s处理语音及表情
+        vTaskDelay(4000/portTICK_PERIOD_MS);
+        //delay(4000);//小车停下1.5s处理语音及表情
         //
       }else if(receive_condition_type1 == 1 && has_condition_type1 == 0 && instant_stop == 0 && has_condition_type2==0 && has_condition_type3==0){
         Serial.println("no condition commands whatsoever");
@@ -125,7 +144,8 @@ void code_parse(String str)
         pwm_local_process_code_behaviors(0);
         receive_voice_flag=true;
         receive_voice_condition=19;//触发了条件但是没有录入任何条件指令
-        delay(4000);//小车停下1.5s处理语音及表情
+        vTaskDelay(4000/portTICK_PERIOD_MS);
+        //delay(4000);//小车停下1.5s处理语音及表情
         //
       }
 
@@ -138,7 +158,8 @@ void code_parse(String str)
         pwm_local_process_code_behaviors(0);
         receive_voice_flag=true;
         receive_voice_condition=16;//第2种环境条件触发
-        delay(4000);//小车停下1.5s处理语音及表情
+        vTaskDelay(4000/portTICK_PERIOD_MS);
+        //delay(4000);//小车停下1.5s处理语音及表情
         //
         processing_condition=true;
         code_parse(code_str_condition_type2);
@@ -152,7 +173,8 @@ void code_parse(String str)
         pwm_local_process_code_behaviors(0);
         receive_voice_flag=true;
         receive_voice_condition=18;//触发了条件但是没有录入对应的条件指令
-        delay(4000);//小车停下1.5s处理语音及表情
+        vTaskDelay(4000/portTICK_PERIOD_MS);
+        //delay(4000);//小车停下1.5s处理语音及表情
         //
       }else if(receive_condition_type2 == 1 && has_condition_type2 == 0 && instant_stop == 0 && has_condition_type1==0 && has_condition_type3==0){
         Serial.println("no condition commands whatsoever");
@@ -162,7 +184,8 @@ void code_parse(String str)
         pwm_local_process_code_behaviors(0);
         receive_voice_flag=true;
         receive_voice_condition=19;//触发了条件但是没有录入任何条件指令
-        delay(4000);//小车停下1.5s处理语音及表情
+        vTaskDelay(4000/portTICK_PERIOD_MS);
+        //delay(4000);//小车停下1.5s处理语音及表情
         //
       }
 
@@ -175,7 +198,8 @@ void code_parse(String str)
         pwm_local_process_code_behaviors(0);
         receive_voice_flag=true;
         receive_voice_condition=17;//第一种环境条件触发
-        delay(4000);//小车停下1.5s处理语音及表情
+        vTaskDelay(4000/portTICK_PERIOD_MS);
+        //delay(4000);//小车停下1.5s处理语音及表情
         //
         processing_condition=true;
         code_parse(code_str_condition_type3);
@@ -189,7 +213,8 @@ void code_parse(String str)
         pwm_local_process_code_behaviors(0);
         receive_voice_flag=true;
         receive_voice_condition=18;//触发了条件但是没有录入对应的条件指令
-        delay(4000);//小车停下1.5s处理语音及表情
+        vTaskDelay(4000/portTICK_PERIOD_MS);
+        //delay(4000);//小车停下1.5s处理语音及表情
         //
       }else if(receive_condition_type3 == 1 && has_condition_type3 == 0 && instant_stop == 0 && has_condition_type1==0 && has_condition_type2==0){
         Serial.println("no condition commands whatsoever");
@@ -199,8 +224,15 @@ void code_parse(String str)
         pwm_local_process_code_behaviors(0);
         receive_voice_flag=true;
         receive_voice_condition=19;//触发了条件但是没有录入任何条件指令
-        delay(4000);//小车停下1.5s处理语音及表情
-        //
+        vTaskDelay(4000/portTICK_PERIOD_MS);
+        //delay(4000);//小车停下1.5s处理语音及表情
+      }
+
+      if(survive_step_on_card==true){
+        Serial.println("Survive step on point card");
+        pwm_local_process_code_behaviors(0);
+        vTaskDelay(5000/portTICK_PERIOD_MS);
+        survive_step_on_card=false;
       }
 
       if (ch == '(')

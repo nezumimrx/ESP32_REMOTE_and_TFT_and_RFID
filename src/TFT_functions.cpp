@@ -15,6 +15,8 @@ unsigned char RowBmp128[2048];//
 int previous_face_condition=0;//
 int previous_symbol_counter=0;//
 int random_facial_type = 1;
+boolean TFT_points_refresh=false; //凡是在显示TFT_points时运行的关于 survive_fuel变化的情况，都需要refresh
+
 /*
 在ESP32使用屏幕的时候，要打开TFT_eSPI库里的User_Setup.h把下面几行默认的备注做更改
 #define ILI9341_DRIVER     //这个关上
@@ -30,6 +32,15 @@ Typical setup for ESP8266 NodeMCU ESP-12 is :下面的都注释掉
 #define TFT_DC    2  //打开
 #define TFT_RST   4  //打开
 */
+
+void IRAM_ATTR TFT_DrawString(String str,int x, int y,int textsize){
+  tft.setRotation(4);
+  tft.setTextColor(TFT_WHITE);
+  tft.setTextSize(textsize);
+  tft.drawString(str,x,y);
+  tft.setRotation(6);
+}
+
 void IRAM_ATTR DrawBmp(String name)
 {
   myFile = SPIFFS.open(name, "r");
@@ -230,16 +241,23 @@ void TFT_drawArrow()
   if(previous_face_condition!=2){
     sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
     sprite.pushSprite(0,0);
-    previous_face_condition=2;
-    for(int i=0;i<18;i++){
-      int temp_symbol=symbol_array[i];
-      if(temp_symbol!=0&&i<4)DrawSymbol(30*i,50,temp_symbol);//显示symbolX.bmp
+    
+    if(symbol_counter==0){
+      face_condition=previous_face_condition;
+    }else {
+      face_condition=2;
+      for(int i=0;i<18;i++){
+        int temp_symbol=symbol_array[i];
+        if(temp_symbol!=0&&i<4)DrawSymbol(30*i,50,temp_symbol);//显示symbolX.bmp
+      }
+      previous_face_condition=2;
     }
   }
   if(current_symbol!=19&&current_symbol!=0&&symbol_add_or_delete==1){//如果接到了有效的编程指令 current_symbol 0-要删除上一个指令 1-前进 2-左转 3-后退 4-右转 5-左平移 6-右平移 7-循环2 8-循环3 9-循环结束 10-条件1开始 11-条件1结束 12-条件2开始 13-条件2结束 14-条件3开始 15-条件3结束
     sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);//数据该更新了，要刷新黑屏
     sprite.pushSprite(0,0);
-    
+    face_condition=2;
+    previous_face_condition=2;
     for(int i=19;i>=1;i--){//因为要添加数据进来，所以除了第0位，从第1位开始所有数据后移一位
       symbol_array[i]=symbol_array[i-1];
     }
@@ -273,6 +291,8 @@ void TFT_drawArrow()
     //由于current_symbol只在3个地方赋值，一个是clear，一个是收到'F'，一个是delete；收到F时不可能为0，clear时counter是0，因此只有delete会触发这个情况
     sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);//数据该更新了，要刷新黑屏
     sprite.pushSprite(0,0);
+    face_condition=2;
+    previous_face_condition=2;
     if(symbol_counter>=1){
       for(int i=0;i<19;i++){//数组有20个，但是我们最多只寸18个symbol，因此18，19位都是0，再怎么循环到i+1也不会超过数组上限
         symbol_array[i]=symbol_array[i+1];
@@ -448,10 +468,10 @@ void TFT_sad_blink(int start_index, int end_index)
   }
 }
 void TFT_sad(){
-  if(previous_face_condition!=4){
+  if(previous_face_condition!=5){
     sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
     sprite.pushSprite(0,0);
-    previous_face_condition=4;
+    previous_face_condition=5;
     TFT_turn_sad(1,11);
   }
   DrawBmp("/4TurnSad11.bmp");
@@ -459,6 +479,59 @@ void TFT_sad(){
   if(temp_facial_switch_to==1){
     TFT_sad_blink(1,7);
   }
+}
+
+void TFT_win(){
+  if(previous_face_condition!=7){
+    sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
+    sprite.pushSprite(0,0);
+    previous_face_condition=7;
+  }
+
+  for(int i=1;i<=41;i++){
+    String filename = "";
+    filename = "/6win (" + String(i) + ").bmp";
+    DrawBmp(filename);
+  }
+}
+
+void TFT_points(){//当start_cypher==1 且 survive_fuel>0 且 survive_time_counter_start==true 显示燃料值和积分
+  if(previous_face_condition!=8){
+    sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
+    sprite.pushSprite(0,0);
+    DrawBmp("/7scorebg.bmp");
+    previous_face_condition=8;
+  }
+  if(TFT_points_refresh==true){
+    DrawBmp("/7scorebg.bmp");
+    TFT_points_refresh=false;
+  }
+  String fuel_string = String(survive_fuel);
+  String score_string = String(survive_collected_points);
+  TFT_DrawString(fuel_string,63,30,5);
+  TFT_DrawString(score_string,63,84,5);
+
+  
+  
+  
+}
+
+void TFT_noFuel(){//当start_cypher==1 且 survive_fuel>0 且 survive_time_counter_start==true 燃料值耗尽
+  if(previous_face_condition!=9){
+    sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
+    sprite.pushSprite(0,0);
+    previous_face_condition=9;
+  }
+  DrawBmp("/5Wonder18.bmp");
+}
+
+void TFT_noTime(){//当start_cypher==1 且 survive_fuel>0 且 survive_time_counter_start==true 时间耗尽
+  if(previous_face_condition!=10){
+    sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
+    sprite.pushSprite(0,0);
+    previous_face_condition=10;
+  }
+  DrawBmp("/4AngryBlink1.bmp");
 }
 
 void TFT_usualExpression()

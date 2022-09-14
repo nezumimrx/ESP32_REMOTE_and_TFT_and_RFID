@@ -81,6 +81,22 @@ void rfid_scan_card()
             else if(what_rfid_block_to_write==16)write_block_ntag213(data_blocks.trap_card_forward,0x06);//forward
             else if(what_rfid_block_to_write==17)write_block_ntag213(data_blocks.trap_card_left,0x06);//left
             else if(what_rfid_block_to_write==18)write_block_ntag213(data_blocks.trap_card_right,0x06);//right
+
+            else if(what_rfid_block_to_write==21)write_block_ntag213(data_blocks.code_1_card_1,0x06);//编程模式下的场景卡
+            else if(what_rfid_block_to_write==22)write_block_ntag213(data_blocks.code_1_card_2,0x06);//编程模式下的场景卡
+            else if(what_rfid_block_to_write==23)write_block_ntag213(data_blocks.code_1_card_3,0x06);//编程模式下的场景卡
+            else if(what_rfid_block_to_write==24)write_block_ntag213(data_blocks.code_1_card_4,0x06);//编程模式下的场景卡
+            else if(what_rfid_block_to_write==25)write_block_ntag213(data_blocks.code_1_card_5,0x06);//编程模式下的场景卡
+            else if(what_rfid_block_to_write==26)write_block_ntag213(data_blocks.code_1_card_6,0x06);//编程模式下的场景卡
+            else if(what_rfid_block_to_write==27)write_block_ntag213(data_blocks.code_1_card_7,0x06);//编程模式下的场景卡
+            else if(what_rfid_block_to_write==28)write_block_ntag213(data_blocks.code_1_card_8,0x06);//编程模式下的场景卡
+            else if(what_rfid_block_to_write==29)write_block_ntag213(data_blocks.code_1_card_9,0x06);//编程模式下的场景卡
+            else if(what_rfid_block_to_write==30)write_block_ntag213(data_blocks.code_1_card_10,0x06);//编程模式下的场景卡
+            else if(what_rfid_block_to_write==31)write_block_ntag213(data_blocks.code_trap_card_type1,0x06);//编程模式下的场景卡
+            else if(what_rfid_block_to_write==32)write_block_ntag213(data_blocks.code_trap_card_type2,0x06);//编程模式下的场景卡
+            else if(what_rfid_block_to_write==33)write_block_ntag213(data_blocks.code_trap_card_type3,0x06);//编程模式下的场景卡
+            else if(what_rfid_block_to_write==34)write_block_ntag213(data_blocks.code_trap_card_type4,0x06);//编程模式下的场景卡
+            else if(what_rfid_block_to_write==35)write_block_ntag213(data_blocks.code_trap_card_type5,0x06);//编程模式下的场景卡
         }
     }
 }
