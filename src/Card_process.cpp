@@ -3,8 +3,10 @@
 #include <ESPNOW_SLAVE.h>
 #include "global_vars.h"
 #include <Code_parse.h>
+#include <TFT_functions.h>
 
 int previous_receive_wheel_condition = 0; //用来储存突发事件前小车的运行状态
+uint8_t stage_num=0;
 boolean played_story_array[10] = {0};     //是否已经播放过语音了
 boolean stage_clear_array[10] = {0};      //记录用户是否通关了
 boolean step_on_right_card_when_start_cypher=false;//如果正在运行start_cypher那么得让设备马上停下来且不发声
@@ -113,6 +115,8 @@ void process_mission(int current_stage, int current_stage_voice_condition)
             receive_voice_condition = current_stage_voice_condition; //播放第前一关通关故事以及第本关开始的故事
             played_story_array[current_stage] = 1;
             step_on_right_card_when_start_cypher=true;//防止运行完start_cypher发提示音打断故事语音
+
+            TFT_switchFace(12);
             
         }
         else if (played_story_array[current_stage-1] == 0)//你他妈连上一关都没开始
@@ -126,6 +130,7 @@ void process_mission(int current_stage, int current_stage_voice_condition)
     { 
         if (stage_clear_array[current_stage] == 0 && played_story_array[current_stage] == 1)
         { //第2关任务没完成呢,但是播放过语音
+            
             receive_voice_flag = true;
             receive_voice_condition = 50;
         }
@@ -149,6 +154,8 @@ void enviroment_story_cards(byte block_buffer[18])
         if (played_story_array[0] == 0 && stage_clear_array[0] == 0)
         { // 1.没播过故事，任务未完成
             receive_voice_condition = 31;
+            stage_num=0;
+            
             played_story_array[0] = 1;
         }
         else if (played_story_array[0] == 1 && stage_clear_array[0] == 0)
@@ -162,21 +169,45 @@ void enviroment_story_cards(byte block_buffer[18])
         }
     }
     //第1关结束，第2关开始, 如果已经开始start_cypher那么这张卡片生效的情况就只有执行第1关任务且未完成第1关任务时，因为如果已完成第1关任务再碰到这张卡就说明
-    else if (block_buffer[1] == 0x12 && (start_cypher==0 || (start_cypher==1&&played_story_array[0]==1&&stage_clear_array[0]==0)) ){ process_mission(1,32);}
+    else if (block_buffer[1] == 0x12 && (start_cypher==0 || (start_cypher==1&&played_story_array[0]==1&&stage_clear_array[0]==0)) ){
+        if(stage_num!=9){stage_num=1;process_mission(stage_num,32);}//未通关
+        else if(stage_num==9){receive_voice_flag=true;receive_voice_condition=53;TFT_switchFace(7);}//已通关
+    }
     //第2关结束，第3关开始
-    else if (block_buffer[1] == 0x13 && (start_cypher==0 || (start_cypher==1&&played_story_array[1]==1&&stage_clear_array[1]==0))){ process_mission(2,33);}
+    else if (block_buffer[1] == 0x13 && (start_cypher==0 || (start_cypher==1&&played_story_array[1]==1&&stage_clear_array[1]==0))){
+        if(stage_num!=9){stage_num=2; process_mission(stage_num,33);}
+        else if(stage_num==9){receive_voice_flag=true;receive_voice_condition=53;TFT_switchFace(7);}//已通关
+    }
     //第3关结束，第4关开始
-    else if(block_buffer[1] == 0x14 && (start_cypher==0 || (start_cypher==1&&played_story_array[2]==1&&stage_clear_array[2]==0))){process_mission(3,34);}
+    else if(block_buffer[1] == 0x14 && (start_cypher==0 || (start_cypher==1&&played_story_array[2]==1&&stage_clear_array[2]==0))){
+       if(stage_num!=9){stage_num=3;process_mission(stage_num,34);}
+       else if(stage_num==9){receive_voice_flag=true;receive_voice_condition=53;TFT_switchFace(7);}//已通关
+    }
     //第4关结束，第5关开始
-    else if(block_buffer[1] == 0x15 && (start_cypher==0 || (start_cypher==1&&played_story_array[3]==1&&stage_clear_array[3]==0))){process_mission(4,35);}
+    else if(block_buffer[1] == 0x15 && (start_cypher==0 || (start_cypher==1&&played_story_array[3]==1&&stage_clear_array[3]==0))){
+        if(stage_num!=9){stage_num=4;process_mission(stage_num,35);}
+        else if(stage_num==9){receive_voice_flag=true;receive_voice_condition=53;TFT_switchFace(7);}//已通关
+    }
     //第5关结束，第6关开始
-    else if(block_buffer[1] == 0x16 && (start_cypher==0 || (start_cypher==1&&played_story_array[4]==1&&stage_clear_array[4]==0))){process_mission(5,36);}
+    else if(block_buffer[1] == 0x16 && (start_cypher==0 || (start_cypher==1&&played_story_array[4]==1&&stage_clear_array[4]==0))){
+        if(stage_num!=9){stage_num=5;process_mission(stage_num,36);}
+        else if(stage_num==9){receive_voice_flag=true;receive_voice_condition=53;TFT_switchFace(7);}//已通关
+    }
     //第6关结束，第7关开始
-    else if(block_buffer[1] == 0x17 && (start_cypher==0 || (start_cypher==1&&played_story_array[5]==1&&stage_clear_array[5]==0))){process_mission(6,37);}
+    else if(block_buffer[1] == 0x17 && (start_cypher==0 || (start_cypher==1&&played_story_array[5]==1&&stage_clear_array[5]==0))){
+        if(stage_num!=9){stage_num=6;process_mission(stage_num,37);}
+        else if(stage_num==9){receive_voice_flag=true;receive_voice_condition=53;TFT_switchFace(7);}//已通关
+    }
     //第7关结束，第8关开始
-    else if(block_buffer[1] == 0x18 && (start_cypher==0 || (start_cypher==1&&played_story_array[6]==1&&stage_clear_array[6]==0))){process_mission(7,38);}
+    else if(block_buffer[1] == 0x18 && (start_cypher==0 || (start_cypher==1&&played_story_array[6]==1&&stage_clear_array[6]==0))){
+        if(stage_num!=9){stage_num=7;process_mission(stage_num,38);}
+        else if(stage_num==9){receive_voice_flag=true;receive_voice_condition=53;TFT_switchFace(7);}//已通关 
+    }
     //第8关结束，第9关开始
-    else if(block_buffer[1] == 0x19 && (start_cypher==0 || (start_cypher==1&&played_story_array[7]==1&&stage_clear_array[7]==0))){process_mission(8,39);}
+    else if(block_buffer[1] == 0x19 && (start_cypher==0 || (start_cypher==1&&played_story_array[7]==1&&stage_clear_array[7]==0))){
+        if(stage_num!=9){stage_num=8;process_mission(stage_num,39);}
+        else if(stage_num==9){receive_voice_flag=true;receive_voice_condition=53;TFT_switchFace(7);}//已通关 
+    }
     else if(block_buffer[1] == 0x20 && (start_cypher==0 || (start_cypher==1&&played_story_array[8]==1&&stage_clear_array[8]==0))){
         cannot_start_cypher=0;
         if (stage_clear_array[8] == 0)
@@ -189,6 +220,8 @@ void enviroment_story_cards(byte block_buffer[18])
                 receive_voice_condition = 40; //播放第前一关通关故事以及第本关开始的故事
                 played_story_array[9] = 1;
                 step_on_right_card_when_start_cypher=true;//防止运行完start_cypher发提示音打断故事语音
+                stage_num=9;
+                TFT_switchFace(7);
             }
             else if (played_story_array[8] == 0)//你他妈连上一关都没开始
             { 
@@ -199,6 +232,7 @@ void enviroment_story_cards(byte block_buffer[18])
         }
         else if (stage_clear_array[8] == 1&&stage_clear_array[9] == 1 && played_story_array[9] == 1)//如果第上一关任务完成了
         { //报告指挥官，在你的带领下，我们已经完成了整个任务！可以切换其他任务模式！比如自定义模式或生存挑战模式等等！
+            TFT_switchFace(7);
             receive_voice_flag = true;
             receive_voice_condition = 53;
         }
@@ -261,6 +295,11 @@ void enviroment_point_cards(byte block_buffer[18])
             receive_voice_flag=true;
             receive_voice_condition=71;
             survive_mode_intro=true;
+            //分数按理说只在第一次扫描的时候清空
+            survive_collected_points=0;
+            for(int i=0;i<10;i++){
+            survive_clear_array[i]=0;
+            }
         }else if(survive_mode_intro==true){
             receive_voice_flag=true;
             receive_voice_condition=50;
@@ -269,18 +308,17 @@ void enviroment_point_cards(byte block_buffer[18])
         //初始化
         survive_start=true;
         survive_clear_array[0]=1;//第一张卡片已经扫描了
-        survive_fuel=1;
+        if(survive_fuel<=1)survive_fuel=1;
+
         TFT_points_refresh=true;
-        survive_collected_points=0;
+        face_condition=8;
         survive_time_counter=0;
         cannot_start_cypher=0;//初始化自动变成可执行编程
-        for(int i=0;i<10;i++){
-            survive_clear_array[i]=0;
-        }
+        
     }
     //      写着数字2的卡           正在运行指令        燃料大于等于0    在生存时间survive_time_limit以内   已经扫描过1号起始卡   没有读取过这个卡片
     else if(block_buffer[1]==0x12&&start_cypher==1&&survive_fuel>=0&&survive_time_counter_start==true&&survive_start==true&&survive_clear_array[1]==0){
-        process_survive_cards(1,1);
+        process_survive_cards(1,1); 
     }
     else if(block_buffer[1]==0x13&&start_cypher==1&&survive_fuel>=0&&survive_time_counter_start==true&&survive_start==true&&survive_clear_array[2]==0){
         process_survive_cards(2,2);
@@ -300,27 +338,27 @@ void enviroment_point_cards(byte block_buffer[18])
         process_survive_cards(9,5);
     }
 
-    else if(block_buffer[1]==0x01&&start_cypher==1&&survive_fuel>=0&&survive_time_counter_start==true&&survive_start==true){
+    else if(block_buffer[1]==0x01&&start_cypher==1&&survive_fuel>=0&&survive_time_counter_start==true&&survive_start==true){//在运行编程指令时遇到陷阱卡type1
         cannot_start_cypher=1;
         receive_voice_flag=true;
         receive_voice_condition=41;
     }
-    else if(block_buffer[1]==0x02&&start_cypher==1&&survive_fuel>=0&&survive_time_counter_start==true&&survive_start==true){
+    else if(block_buffer[1]==0x02&&start_cypher==1&&survive_fuel>=0&&survive_time_counter_start==true&&survive_start==true){//在运行编程指令时遇到陷阱卡type2
         receive_voice_flag=true;
         receive_voice_condition=42;
         cannot_start_cypher=1;
     }
-    else if(block_buffer[1]==0x03&&start_cypher==1&&survive_fuel>=0&&survive_time_counter_start==true&&survive_start==true){
+    else if(block_buffer[1]==0x03&&start_cypher==1&&survive_fuel>=0&&survive_time_counter_start==true&&survive_start==true){//在运行编程指令时遇到陷阱卡type3
         receive_voice_flag=true;
         receive_voice_condition=43;
         cannot_start_cypher=1;
     }
-    else if(block_buffer[1]==0x04&&start_cypher==1&&survive_fuel>=0&&survive_time_counter_start==true&&survive_start==true){
+    else if(block_buffer[1]==0x04&&start_cypher==1&&survive_fuel>=0&&survive_time_counter_start==true&&survive_start==true){//在运行编程指令时遇到陷阱卡type4
         receive_voice_flag=true;
         receive_voice_condition=44;
         cannot_start_cypher=1;
     }
-    else if(block_buffer[1]==0x05&&start_cypher==1&&survive_fuel>=0&&survive_time_counter_start==true&&survive_start==true){
+    else if(block_buffer[1]==0x05&&start_cypher==1&&survive_fuel>=0&&survive_time_counter_start==true&&survive_start==true){//在运行编程指令时遇到陷阱卡type5
         receive_voice_flag=true;
         receive_voice_condition=45;
         cannot_start_cypher=1;
