@@ -18,6 +18,9 @@ void TFT_points();
 void TFT_noFuel();
 void TFT_noTime();
 void TFT_DrawString(String str, int x, int y);
+void TFT_warning();
+void TFT_stage_clear();
+void TFT_switchFace(int num);
 void DrawBmp(String filename);
 
 #endif

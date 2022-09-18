@@ -103,6 +103,10 @@ void TFT_TASK(void *parameters)
       TFT_noFuel();
     }else if(face_condition==10){
       TFT_noTime();
+    }else if(face_condition==11){
+      TFT_warning();
+    }else if(face_condition==12){
+      TFT_stage_clear();
     }
     
     

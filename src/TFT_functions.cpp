@@ -33,6 +33,14 @@ Typical setup for ESP8266 NodeMCU ESP-12 is :下面的都注释掉
 #define TFT_RST   4  //打开
 */
 
+void TFT_switchFace(int num){
+  vTaskSuspend(TFT_TASK_Handle);
+  TFT_instant_stop=true;
+  face_condition=num;
+  vTaskResume(TFT_TASK_Handle);
+  
+}
+
 void IRAM_ATTR TFT_DrawString(String str,int x, int y,int textsize){
   tft.setRotation(4);
   tft.setTextColor(TFT_WHITE);
@@ -69,6 +77,8 @@ void IRAM_ATTR DrawBmp(String name)
     Serial.println(name);
   }
 }
+
+
 
 void IRAM_ATTR DrawBmp128(int x, int y,String name)
 {
@@ -511,9 +521,6 @@ void TFT_points(){//当start_cypher==1 且 survive_fuel>0 且 survive_time_count
   TFT_DrawString(fuel_string,63,30,5);
   TFT_DrawString(score_string,63,84,5);
 
-  
-  
-  
 }
 
 void TFT_noFuel(){//当start_cypher==1 且 survive_fuel>0 且 survive_time_counter_start==true 燃料值耗尽
@@ -532,6 +539,46 @@ void TFT_noTime(){//当start_cypher==1 且 survive_fuel>0 且 survive_time_count
     previous_face_condition=10;
   }
   DrawBmp("/4AngryBlink1.bmp");
+}
+
+void TFT_warning(){//当start_cypher==1 且 survive_fuel>0 且 survive_time_counter_start==true 时间耗尽
+  if(previous_face_condition!=11){
+    sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
+    sprite.pushSprite(0,0);
+    previous_face_condition=11;
+  }
+  for (int i = 1; i <= 30; i++)
+  {
+    String filename = "";
+    filename = "/8warning (" + String(i) + ").bmp";
+    DrawBmp(filename);
+    vTaskDelay(5/portTICK_PERIOD_MS);
+  }
+}
+
+void TFT_stage_clear(){
+  if(previous_face_condition!=12){
+    sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
+    sprite.pushSprite(0,0);
+    previous_face_condition=12;
+  }
+  
+  for (int i = 1; i <= 27; i++)
+  {
+    if(TFT_instant_stop==false){
+      String filename = "";
+      filename = "/9circle (" + String(i) + ").bmp";
+      DrawBmp(filename);
+      String stage_str = String(stage_num);
+      TFT_DrawString(stage_str,52,55,5);
+    }
+  }
+  
+  for(int i=0;i<40;i++){
+    if(TFT_instant_stop==false)vTaskDelay(50/portTICK_PERIOD_MS);
+  }
+
+  TFT_instant_stop=false;
 }
 
 void TFT_usualExpression()

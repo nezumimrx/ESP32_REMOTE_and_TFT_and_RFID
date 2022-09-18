@@ -198,18 +198,23 @@ void voice_receive_esp_now_behaviors(){
             random_play_num=209;
             code_parse_emergent_stop();
         }else if(receive_voice_condition==41){//陷阱type1
+            face_condition=11;//warning face
             random_play_num=211;//陷阱语音1
             code_parse_emergent_stop();
         }else if(receive_voice_condition==42){//陷阱type2
+            face_condition=11;//warning face
             random_play_num=212;//陷阱语音2
             code_parse_emergent_stop();
         }else if(receive_voice_condition==43){//陷阱type3
+            face_condition=11;//warning face
             random_play_num=213;//陷阱语音3
             code_parse_emergent_stop();
         }else if(receive_voice_condition==44){//陷阱type4
+            face_condition=11;//warning face
             random_play_num=214;//陷阱语音4
             code_parse_emergent_stop();
         }else if(receive_voice_condition==45){//陷阱type5
+            face_condition=11;//warning face
             random_play_num=215;//陷阱语音5
             code_parse_emergent_stop();
         }else if(receive_voice_condition==50){//从新开始本关

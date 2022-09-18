@@ -130,4 +130,4 @@
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/soc/esp32/spiram.h \
  src/ESPNOW_SLAVE.h src/global_vars.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src/Preferences.h \
- src/Code_parse.h
+ src/Code_parse.h src/TFT_functions.h
