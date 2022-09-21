@@ -217,7 +217,15 @@ void voice_receive_esp_now_behaviors(){
             face_condition=11;//warning face
             random_play_num=215;//陷阱语音5
             code_parse_emergent_stop();
-        }else if(receive_voice_condition==50){//从新开始本关
+        }else if(receive_voice_condition==46){//前进指令声音
+            random_play_num=random(111,114);//前进指令声音
+        }else if(receive_voice_condition==47){//左转指令声音
+            random_play_num=random(114,117);//左转指令声音
+        }else if(receive_voice_condition==48){//右转指令声音
+            random_play_num=random(117,120);//右转指令声音
+        }
+        
+        else if(receive_voice_condition==50){//从新开始本关
             random_play_num=random(146,150);
         }else if(receive_voice_condition==51){//这个任务已经完成了，但是用户再次扫了这个任务卡，对应3播放过故事，且任务完成
             random_play_num=random(144,146);

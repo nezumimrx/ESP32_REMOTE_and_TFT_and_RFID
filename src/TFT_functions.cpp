@@ -73,7 +73,7 @@ void IRAM_ATTR DrawBmp(String name)
   }
   else
   {
-    // Serial.print(F("error opening "));
+    //Serial.print(F("error opening "));
     Serial.println(name);
   }
 }
@@ -578,6 +578,60 @@ void TFT_stage_clear(){
     if(TFT_instant_stop==false)vTaskDelay(50/portTICK_PERIOD_MS);
   }
 
+  TFT_instant_stop=false;
+}
+
+void TFT_forward(){
+  if(previous_face_condition!=13){
+    sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
+    sprite.pushSprite(0,0);
+    previous_face_condition=13;
+  }
+  for (int i = 1; i <= 8; i++)
+  {
+    if(TFT_instant_stop==false){
+      String filename = "";
+      filename = "/10forward (" + String(i) + ").bmp";
+      DrawBmp(filename);
+      vTaskDelay(5/portTICK_PERIOD_MS);
+    }
+  }
+  TFT_instant_stop=false;
+}
+
+void TFT_left(){
+  if(previous_face_condition!=14){
+    sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
+    sprite.pushSprite(0,0);
+    previous_face_condition=14;
+  }
+  for (int i = 1; i <= 8; i++)
+  {
+    if(TFT_instant_stop==false){
+      String filename = "";
+      filename = "/10left (" + String(i) + ").bmp";
+      DrawBmp(filename);
+      vTaskDelay(5/portTICK_PERIOD_MS);
+    }
+  }
+  TFT_instant_stop=false;
+}
+
+void TFT_right(){
+  if(previous_face_condition!=15){
+    sprite.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
+    sprite.pushSprite(0,0);
+    previous_face_condition=15;
+  }
+  for (int i = 1; i <= 8; i++)
+  {
+    if(TFT_instant_stop==false){
+      String filename = "";
+      filename = "/10right (" + String(i) + ").bmp";
+      DrawBmp(filename);
+      vTaskDelay(5/portTICK_PERIOD_MS);
+    }
+  }
   TFT_instant_stop=false;
 }
 

@@ -107,6 +107,12 @@ void TFT_TASK(void *parameters)
       TFT_warning();
     }else if(face_condition==12){
       TFT_stage_clear();
+    }else if(face_condition==13){
+      TFT_forward();
+    }else if(face_condition==14){
+      TFT_left();
+    }else if(face_condition==15){
+      TFT_right();
     }
     
     
@@ -123,7 +129,7 @@ void RFID_TASK(void *parameters)
     
     connection_loop_counter++;
     if(connection_loop_counter==30){connection_loop_counter=0;send_data_now('0',0);}//每1.5秒钟检测一次是否连接控制器，更新connected_with_controller
-    if(remote_mode_stepped_card_condition!=0){remote_mode_stepped_card_counter++;}
+    if(remote_mode_stepped_card_condition!=0){remote_mode_stepped_card_counter++;}//遥控模式下的卡踩到就开始计时
     if(flash_emo_counter_handle==true){
       flash_emo_counter++;
       if(flash_emo_counter>=60){

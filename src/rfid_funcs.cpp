@@ -81,6 +81,8 @@ void rfid_scan_card()
             else if(what_rfid_block_to_write==16)write_block_ntag213(data_blocks.trap_card_forward,0x06);//forward
             else if(what_rfid_block_to_write==17)write_block_ntag213(data_blocks.trap_card_left,0x06);//left
             else if(what_rfid_block_to_write==18)write_block_ntag213(data_blocks.trap_card_right,0x06);//right
+            else if(what_rfid_block_to_write==18)write_block_ntag213(data_blocks.trap_card_loop,0x06);//loop
+            else if(what_rfid_block_to_write==18)write_block_ntag213(data_blocks.trap_card_condition,0x06);//condition
 
             else if(what_rfid_block_to_write==21)write_block_ntag213(data_blocks.code_1_card_1,0x06);//编程模式下的场景卡
             else if(what_rfid_block_to_write==22)write_block_ntag213(data_blocks.code_1_card_2,0x06);//编程模式下的场景卡
@@ -92,11 +94,11 @@ void rfid_scan_card()
             else if(what_rfid_block_to_write==28)write_block_ntag213(data_blocks.code_1_card_8,0x06);//编程模式下的场景卡
             else if(what_rfid_block_to_write==29)write_block_ntag213(data_blocks.code_1_card_9,0x06);//编程模式下的场景卡
             else if(what_rfid_block_to_write==30)write_block_ntag213(data_blocks.code_1_card_10,0x06);//编程模式下的场景卡
-            else if(what_rfid_block_to_write==31)write_block_ntag213(data_blocks.code_trap_card_type1,0x06);//编程模式下的场景卡
-            else if(what_rfid_block_to_write==32)write_block_ntag213(data_blocks.code_trap_card_type2,0x06);//编程模式下的场景卡
-            else if(what_rfid_block_to_write==33)write_block_ntag213(data_blocks.code_trap_card_type3,0x06);//编程模式下的场景卡
-            else if(what_rfid_block_to_write==34)write_block_ntag213(data_blocks.code_trap_card_type4,0x06);//编程模式下的场景卡
-            else if(what_rfid_block_to_write==35)write_block_ntag213(data_blocks.code_trap_card_type5,0x06);//编程模式下的场景卡
+            else if(what_rfid_block_to_write==31)write_block_ntag213(data_blocks.code_trap_card_type1,0x06);//编程模式下的场景卡 泥潭
+            else if(what_rfid_block_to_write==32)write_block_ntag213(data_blocks.code_trap_card_type2,0x06);//编程模式下的场景卡 荆棘
+            else if(what_rfid_block_to_write==33)write_block_ntag213(data_blocks.code_trap_card_type3,0x06);//编程模式下的场景卡 沼泽
+            else if(what_rfid_block_to_write==34)write_block_ntag213(data_blocks.code_trap_card_type4,0x06);//编程模式下的场景卡 水
+            else if(what_rfid_block_to_write==35)write_block_ntag213(data_blocks.code_trap_card_type5,0x06);//编程模式下的场景卡 火山
         }
     }
 }

@@ -4,7 +4,7 @@
 #include "global_vars.h"
 #include <Code_parse.h>
 #include <TFT_functions.h>
-
+#include <pwm.h>
 int previous_receive_wheel_condition = 0; //用来储存突发事件前小车的运行状态
 uint8_t stage_num=0;
 boolean played_story_array[10] = {0};     //是否已经播放过语音了
@@ -86,18 +86,58 @@ void enviroment_remotebuff_cards(byte block_buffer[18])
         remote_mode_stepped_card_condition = 99;
         remote_mode_stepped_card_counter = 0;
     }
-    else if (block_buffer[1] == 0x16)
+    else if (block_buffer[1] == 0x16 &&(remote_mode_stepped_card_counter==0||remote_mode_stepped_card_counter>10))//(counter==0)是没踩到卡片的情况，counter>10是踩到卡片且距离上一次卡片间隔大于500ms的情况 
     { //主动前进卡
+        //停下2秒说话变表情
+        receive_voice_flag=true;
+        receive_voice_condition=46;
+        flash_emo_counter_handle=true;//开启flash_emo显示时间的计时器
+        flash_emo_counter=0;//flash_emo显示时间计时器清零
+        flash_emo_previous_face_condition=0;//储存一下切换为flash_emo之前是什么表情
+        vTaskSuspend(TFT_TASK_Handle);
+        TFT_instant_stop=true;
+        vTaskResume(TFT_TASK_Handle);
+        face_condition=13;
+        pwm_stop();
+        delay(2500);
+        //
+        
         remote_mode_stepped_card_condition = 6;
         remote_mode_stepped_card_counter = 0;
     }
-    else if (block_buffer[1] == 0x17)
+    else if (block_buffer[1] == 0x17&&(remote_mode_stepped_card_counter==0||remote_mode_stepped_card_counter>10))
     { //主动左转卡
+        //停下2秒说话变表情
+        receive_voice_flag=true;
+        receive_voice_condition=47;
+        flash_emo_counter_handle=true;//开启flash_emo显示时间的计时器
+        flash_emo_counter=0;//flash_emo显示时间计时器清零
+        flash_emo_previous_face_condition=0;//储存一下切换为flash_emo之前是什么表情
+        vTaskSuspend(TFT_TASK_Handle);
+        TFT_instant_stop=true;
+        vTaskResume(TFT_TASK_Handle);
+        face_condition=14;
+        pwm_stop();
+        delay(2500);
+        //
         remote_mode_stepped_card_condition = 7;
         remote_mode_stepped_card_counter = 0;
     }
-    else if (block_buffer[1] == 0x18)
+    else if (block_buffer[1] == 0x18&&(remote_mode_stepped_card_counter==0||remote_mode_stepped_card_counter>10))
     { //主动右转卡
+        //停下2秒说话变表情
+        receive_voice_flag=true;
+        receive_voice_condition=48;
+        flash_emo_counter_handle=true;//开启flash_emo显示时间的计时器
+        flash_emo_counter=0;//flash_emo显示时间计时器清零
+        flash_emo_previous_face_condition=0;//储存一下切换为flash_emo之前是什么表情
+        vTaskSuspend(TFT_TASK_Handle);
+        TFT_instant_stop=true;
+        vTaskResume(TFT_TASK_Handle);
+        face_condition=15;
+        pwm_stop();
+        delay(2500);
+        //
         remote_mode_stepped_card_condition = 8;
         remote_mode_stepped_card_counter = 0;
     }

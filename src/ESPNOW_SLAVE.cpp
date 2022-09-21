@@ -5,6 +5,8 @@
 #include <esp_wifi.h>
 #include <CheckCode.h>
 #include "global_vars.h"
+#include "Voice_funcs.h"
+
 typedef struct data_to_send
 {
   int x;
@@ -113,6 +115,13 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
                 if(mode_switch_condition==0){receive_voice_flag=true;receive_voice_condition=20;cannot_start_cypher=0;}//切换为遥控
                 else if(mode_switch_condition==1){receive_voice_flag=true;receive_voice_condition=21;cannot_start_cypher=0;}//切换为编程
                 else if(mode_switch_condition==2){receive_voice_flag=true;receive_voice_condition=30;survive_mode_intro=false;survive_time_counter=0;survive_fuel=1;survive_collected_points=0;cannot_start_cypher=0;}//切换为生存挑战
+            }
+        }else if(*received_data.x=='V'){
+            if(received_data.y==1){//接收到调节音量的
+                if(volume==15){volume=0;pref.begin("volume",false);pref.putInt("vol",volume);pref.end();change_volume(volume);}
+                else if(volume==0){volume=27;pref.begin("volume",false);pref.putInt("vol",volume);pref.end();change_volume(volume);play_voice(63);}
+                else if(volume==27){volume=20;pref.begin("volume",false);pref.putInt("vol",volume);pref.end();change_volume(volume);play_voice(63);}
+                else if(volume==20){volume=15;pref.begin("volume",false);pref.putInt("vol",volume);pref.end();change_volume(volume);play_voice(63);}
             }
         }
     }
