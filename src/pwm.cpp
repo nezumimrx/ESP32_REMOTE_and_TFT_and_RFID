@@ -311,7 +311,7 @@ void pwm_receive_esp_now_behaviors()
         }
 
         if (remote_mode_stepped_card_condition == 8 && remote_mode_stepped_card_counter >= 0 && remote_mode_stepped_card_counter < turn_90_degree_cost_time)
-        { //左转卡
+        { //右转卡
             receive_data_flag = true;
             receive_wheel_condition = 4;
             motor_speed = 155;
@@ -330,6 +330,31 @@ void pwm_receive_esp_now_behaviors()
             remote_mode_stepped_card_condition = 0;
             remote_mode_stepped_card_counter = 0;
         }
+
+        if(remote_mode_stepped_card_condition == 9 && remote_mode_stepped_card_counter<enviroment_card_record_time&&enviroment_counter_short_stop==false){//踩到了循环指令并开始向前移动进行记录
+            
+
+            receive_data_flag = true;
+            receive_wheel_condition = 1;
+            motor_speed = 100;
+        } else if (remote_mode_stepped_card_condition == 9 && remote_mode_stepped_card_counter >= enviroment_card_record_time)
+        {
+            receive_voice_flag=true;
+            if(loop_recorded_counter>0)receive_voice_condition=81;//播放结束记录语音
+            else if(loop_recorded_counter==0)receive_voice_condition=82;//播放未记录任何指令
+            
+            enviroment_loop_record_handle=false;
+
+
+            receive_data_flag = true;
+            receive_wheel_condition = 0;
+            motor_speed = 175;
+            remote_mode_stepped_card_condition = 0;
+            remote_mode_stepped_card_counter = 0;
+        }
+
+
+
     }
 
     if (receive_data_flag == true)

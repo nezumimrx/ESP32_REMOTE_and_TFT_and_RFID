@@ -38,7 +38,7 @@ int motor_speed=175;
 int full_speed=175;
 int slow_speed=100;
 boolean remote_running=false;
-int remote_mode_stepped_card_condition=0;//0-没有踩到卡，1-踩到加速卡，2踩到减速卡，3踩到掉头卡，4踩到混乱卡，5踩到停顿卡，99-胜利卡
+int remote_mode_stepped_card_condition=0;//0-没有踩到卡，1-踩到加速卡，2踩到减速卡，3踩到掉头卡，4踩到混乱卡，5踩到停顿卡，6-直行，7-左转，8-右转，9-循环，10-条件，99-胜利卡
 int remote_mode_stepped_card_counter=0;//踩到卡的计时器，如果踩到，debuff持续3秒，buff持续5秒
 
 int face_condition=0;//0-默认脸，1-编程脸
@@ -71,7 +71,7 @@ boolean TFT_instant_stop=false;
 boolean robot_started=false;//初始化完，遥控器的按键才有效
 int flash_emo_counter=0;
 boolean flash_emo_counter_handle=false;
-int flash_emo_time_max=60;//因为再RFID_TASK中所以是每50ms +1，那60就是3秒钟，flash_emo_持续3秒
+int flash_emo_time_max=20;//因为再RFID_TASK中所以是每50ms +1，那60就是3秒钟，flash_emo_持续3秒
 int flash_emo_previous_face_condition=99;////用来储存在切换为flash_emo之前是什么表情
 
 int mode_switch_condition;////0-遥控模式, 1 -编程闯关模式，2-编程积分模式
@@ -129,7 +129,7 @@ void RFID_TASK(void *parameters)
     
     connection_loop_counter++;
     if(connection_loop_counter==30){connection_loop_counter=0;send_data_now('0',0);}//每1.5秒钟检测一次是否连接控制器，更新connected_with_controller
-    if(remote_mode_stepped_card_condition!=0){remote_mode_stepped_card_counter++;}//遥控模式下的卡踩到就开始计时
+    if(remote_mode_stepped_card_condition!=0&&enviroment_counter_short_stop==false){remote_mode_stepped_card_counter++;}//遥控模式下的卡踩到就开始计时
     if(flash_emo_counter_handle==true){
       flash_emo_counter++;
       if(flash_emo_counter>=60){

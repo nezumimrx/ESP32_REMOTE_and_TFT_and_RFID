@@ -262,6 +262,27 @@ void voice_receive_esp_now_behaviors(){
         }else if(receive_voice_condition==79){//5级矿物
             random_play_num=228;
         }
+        else if(receive_voice_condition==80){//循环开始记录
+            random_play_num=120;
+        }else if(receive_voice_condition==81){//循环记录结束
+            random_play_num=121;
+        }else if(receive_voice_condition==82){//循环未记录任何指令
+            random_play_num=122;
+        }else if(receive_voice_condition==83){//执行2循环命令
+            random_play_num=123;
+        }else if(receive_voice_condition==84){//执行3循环命令
+            random_play_num=124;
+        }
+        else if(receive_voice_condition==85){//条件开始记录
+            random_play_num=128;
+        }else if(receive_voice_condition==86){//条件记录结束
+            random_play_num=129;
+        }else if(receive_voice_condition==87){//条件未记录任何指令
+            random_play_num=130;
+        }else if(receive_voice_condition==88){//执行条件命令
+            random_play_num=131;
+        }
+
         play_voice(random_play_num);
         receive_voice_flag=false;
     }

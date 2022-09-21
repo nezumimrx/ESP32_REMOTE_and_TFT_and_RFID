@@ -3,7 +3,7 @@
 #include <Arduino.h>
 void rfid_init();
 void read_block_ntag213(uint8_t blockAddr, byte (&block_buffer)[18]);
-void rfid_scan_card();
+boolean rfid_scan_card();
 void Serial_commands();
 #endif
 

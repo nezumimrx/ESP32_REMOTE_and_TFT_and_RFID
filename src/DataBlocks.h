@@ -21,8 +21,10 @@ class DataBlocks
     byte trap_card_forward[2]= {0xC2,0x16};//前进卡
     byte trap_card_left[2]= {0xC2,0x17};//左转卡
     byte trap_card_right[2]= {0xC2,0x18};//右转卡
-    byte trap_card_loop[2]={0xC2,0x19};//循环卡
-    byte trap_card_condition[2]={0xC2,0x20};//条件卡
+    byte trap_card_loop2[2]={0xC2,0x19};//循2次环卡
+    byte trap_card_loop3[2]={0xC2,0x20};//循3次环卡
+
+    byte trap_card_condition[2]={0xC2,0x31};//条件卡
     //闯关\积分模式场地卡
     byte code_1_card_1[2]={0xC3,0x11};//第1关开始
     byte code_1_card_2[2]={0xC3,0x12};//第1关结束，第2关开始

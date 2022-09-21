@@ -51,12 +51,14 @@ void write_block_ntag213(byte *dataBlock, uint8_t blockAddr)
         Serial.println(F("NTAG213_Write() OK "));
 }
 
-void rfid_scan_card()
+boolean rfid_scan_card()
 {
     boolean is_new_card_present = rfid.PICC_IsNewCardPresent();
     boolean read_card_serial = rfid.PICC_ReadCardSerial();
+    boolean return_value=false;
     if (is_new_card_present && read_card_serial)
     {
+        return_value=true;
         if (write_or_read == 0)
         {
             rfid_block_buffer[18] = {0};
@@ -81,8 +83,10 @@ void rfid_scan_card()
             else if(what_rfid_block_to_write==16)write_block_ntag213(data_blocks.trap_card_forward,0x06);//forward
             else if(what_rfid_block_to_write==17)write_block_ntag213(data_blocks.trap_card_left,0x06);//left
             else if(what_rfid_block_to_write==18)write_block_ntag213(data_blocks.trap_card_right,0x06);//right
-            else if(what_rfid_block_to_write==18)write_block_ntag213(data_blocks.trap_card_loop,0x06);//loop
-            else if(what_rfid_block_to_write==18)write_block_ntag213(data_blocks.trap_card_condition,0x06);//condition
+            else if(what_rfid_block_to_write==19)write_block_ntag213(data_blocks.trap_card_loop2,0x06);//loop2
+            else if(what_rfid_block_to_write==20)write_block_ntag213(data_blocks.trap_card_loop3,0x06);//loop3
+
+            else if(what_rfid_block_to_write==9)write_block_ntag213(data_blocks.trap_card_condition,0x06);//condition
 
             else if(what_rfid_block_to_write==21)write_block_ntag213(data_blocks.code_1_card_1,0x06);//编程模式下的场景卡
             else if(what_rfid_block_to_write==22)write_block_ntag213(data_blocks.code_1_card_2,0x06);//编程模式下的场景卡
@@ -101,6 +105,7 @@ void rfid_scan_card()
             else if(what_rfid_block_to_write==35)write_block_ntag213(data_blocks.code_trap_card_type5,0x06);//编程模式下的场景卡 火山
         }
     }
+    return return_value;
 }
 
 void Serial_commands()

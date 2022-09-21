@@ -71,3 +71,14 @@ extern int survive_time_counter;
 extern int survive_fuel;//生存模式燃料值
 extern int survive_collected_points;//生存模式积分
 extern boolean TFT_points_refresh;
+
+extern boolean enviroment_loop_record_handle;//开启记录环境卡片中循环命令包含的内容
+extern boolean enviroment_condition_record_handle;//开启记录环境卡片中条件命令包含的内容
+extern boolean enviroment_counter_short_stop;//这个是为了条件或循环指令卡在记录指令时，暂时暂停计时
+extern int enviroment_card_record_time;//放在循环或条件卡上之后，往前走多久就是及记录多久
+extern int loop_recorded_cards[3];//用来记录所有存进去的指令，目前上限是3张动作卡
+extern int loop_recorded_counter;//用来记录存了几个循环命令触发时要执行的指令
+extern int condition_recorded_cards[3];//用来记录所有存进去的指令，目前上限是3张动作卡
+extern int condition_recorded_counter;//用来记录存了几个条件命令触发时要执行的指令
+
+
