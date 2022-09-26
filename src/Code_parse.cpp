@@ -36,10 +36,11 @@ void process_wheel(String str, int i)
   //如果后面没有时间，只是单纯的W1\W2\W3\W4\W5\W6的话，停顿1秒
   else if(next_next_char!='0'){
     pwm_local_process_code_behaviors(move_condition);
-    //delay(500);
-    vTaskDelay(500/portTICK_PERIOD_MS);
+    if(move_condition==3)vTaskDelay(320/portTICK_PERIOD_MS);//旋转时间
+    else if(move_condition==4)vTaskDelay(320/portTICK_PERIOD_MS);//旋转时间
+    else vTaskDelay(230/portTICK_PERIOD_MS);//直行时间
+    
     pwm_local_process_code_behaviors(0);
-    //delay(200);
     vTaskDelay(200/portTICK_PERIOD_MS);
     i++;
   }

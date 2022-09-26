@@ -855,44 +855,44 @@ void enviroment_point_cards(byte block_buffer[18])
         cannot_start_cypher = 0; //初始化自动变成可执行编程
     }
     //      写着数字2的卡           正在运行指令        燃料大于等于0    在生存时间survive_time_limit以内   已经扫描过1号起始卡   没有读取过这个卡片
-    else if (block_buffer[1] == 0x12 && start_cypher == 1 && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[1] == 0)
+    else if (block_buffer[1] == 0x12 && (start_cypher == 1||start_cypher_pass_on_start==1) && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[1] == 0)
     {
         process_survive_cards(1, 1);
     }
-    else if (block_buffer[1] == 0x13 && start_cypher == 1 && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[2] == 0)
+    else if (block_buffer[1] == 0x13 && (start_cypher == 1||start_cypher_pass_on_start==1) && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[2] == 0)
     {
         process_survive_cards(2, 2);
     }
-    else if (block_buffer[1] == 0x14 && start_cypher == 1 && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[3] == 0)
+    else if (block_buffer[1] == 0x14 && (start_cypher == 1||start_cypher_pass_on_start==1) && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[3] == 0)
     {
         process_survive_cards(3, 2);
     }
-    else if (block_buffer[1] == 0x15 && start_cypher == 1 && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[4] == 0)
+    else if (block_buffer[1] == 0x15 && (start_cypher == 1||start_cypher_pass_on_start==1) && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[4] == 0)
     {
         process_survive_cards(4, 5);
     }
-    else if (block_buffer[1] == 0x16 && start_cypher == 1 && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[5] == 0)
+    else if (block_buffer[1] == 0x16 && (start_cypher == 1||start_cypher_pass_on_start==1) && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[5] == 0)
     {
         process_survive_cards(5, 1);
     }
-    else if (block_buffer[1] == 0x17 && start_cypher == 1 && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[6] == 0)
+    else if (block_buffer[1] == 0x17 && (start_cypher == 1||start_cypher_pass_on_start==1) && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[6] == 0)
     {
         process_survive_cards(6, 1);
     }
-    else if (block_buffer[1] == 0x18 && start_cypher == 1 && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[7] == 0)
+    else if (block_buffer[1] == 0x18 && (start_cypher == 1||start_cypher_pass_on_start==1) && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[7] == 0)
     {
         process_survive_cards(7, 2);
     }
-    else if (block_buffer[1] == 0x19 && start_cypher == 1 && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[8] == 0)
+    else if (block_buffer[1] == 0x19 && (start_cypher == 1||start_cypher_pass_on_start==1) && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[8] == 0)
     {
         process_survive_cards(8, 1);
     }
-    else if (block_buffer[1] == 0x20 && start_cypher == 1 && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[9] == 0)
+    else if (block_buffer[1] == 0x20 && (start_cypher == 1||start_cypher_pass_on_start==1) && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true && survive_clear_array[9] == 0)
     {
         process_survive_cards(9, 5);
     }
 
-    else if (block_buffer[1] == 0x01 && start_cypher == 1 && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true)
+    else if (block_buffer[1] == 0x01 && (start_cypher == 1||start_cypher_pass_on_start==1) && survive_fuel >= 0 && survive_time_counter_start == true && survive_start == true)
     { //在运行编程指令时遇到陷阱卡type1
         cannot_start_cypher = 1;
         receive_voice_flag = true;

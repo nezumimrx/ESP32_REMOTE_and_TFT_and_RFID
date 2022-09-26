@@ -63,6 +63,9 @@ boolean has_condition_type3=false;
 boolean receive_condition_type3=false;
 boolean instant_stop=0;
 boolean start_cypher=0;//先在main里分析代码正确与否再在线程Code_Process_TASK中处理code_parse
+boolean start_cypher_pass_on_start=false;//有时候即使start_cypher运行完了，但是小车还在因为惯性移动，那时候走到卡片上也应该算，所以这里加2秒后续读取卡片的有效时间
+int start_cypher_pass_on_timer=0;//有时候即使start_cypher运行完了，但是小车还在因为惯性移动，那时候走到卡片上也应该算，所以这里加2秒后续读取卡片的有效时间
+uint8_t start_cypher_pass_on_max_time=40;//40*50ms，2秒持续读取卡片有效时间
 
 TaskHandle_t Code_Process_Handle;
 TaskHandle_t TFT_TASK_Handle;
@@ -146,6 +149,14 @@ void RFID_TASK(void *parameters)
         survive_time_counter_start=false;
       }
     }
+
+    if(start_cypher_pass_on_start==true){
+      start_cypher_pass_on_timer++;
+      if(start_cypher_pass_on_timer>=start_cypher_pass_on_max_time){
+        start_cypher_pass_on_start=false;
+        start_cypher_pass_on_timer=0;
+      }
+    }
     vTaskDelay(50 / portTICK_PERIOD_MS);
   }
 }
@@ -154,6 +165,8 @@ void Code_Process_TASK(void *parameters){
   for(;;){
     if(start_cypher==true){
       code_parse(code_str_clean);
+      start_cypher_pass_on_start=true;
+      start_cypher_pass_on_timer=0;
       start_cypher=0;
       //play voice mission complete! and emo_mission_complete
       if(instant_stop==0&&step_on_right_card_when_start_cypher==false){

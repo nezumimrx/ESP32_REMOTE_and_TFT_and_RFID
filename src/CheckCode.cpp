@@ -211,7 +211,7 @@ void check_code(String code_str_raw_local)
         
         receive_voice_flag = true;
         receive_voice_condition = 6; //运行、启动、开始执行编程指令
-        if(mode_switch_condition==2&&survive_time_counter_start==false&&survive_start==true){survive_time_counter_start=true;receive_voice_condition=73;}//在生存模式下，如果第一次接收到了用户的指令，那么就开始5分钟倒计时 语音提示倒计时开始
+        if(mode_switch_condition==2&&survive_time_counter_start==false&&survive_start==true){survive_time_counter_start=true;receive_voice_condition=73;delay(2000);}//在生存模式下，如果第一次接收到了用户的指令，那么就开始5分钟倒计时 语音提示倒计时开始
         if(mode_switch_condition==2&&survive_time_counter_start==true&&survive_start==true&&survive_fuel>0){//如果在限定时间内，每执行一次程序燃料数-1
             survive_fuel--;  
             TFT_points_refresh=true;

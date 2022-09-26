@@ -83,9 +83,9 @@ void voice_receive_esp_now_behaviors(){
             random_play_num=random(29,32);
         }else if(receive_voice_condition==10){//条件结束命令
             random_play_num=random(32,35);
-        }else if(receive_voice_condition==11){//条件结束命令
+        }else if(receive_voice_condition==11){//循环开始
             random_play_num=random(35,38);
-        }else if(receive_voice_condition==12){//条件结束命令
+        }else if(receive_voice_condition==12){//循环结束    
             random_play_num=random(38,41);
         }else if(receive_voice_condition==13){//程序运行完毕
             int random_sound_effect=random(78,81);

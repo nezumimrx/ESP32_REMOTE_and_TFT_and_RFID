@@ -278,15 +278,15 @@ void TFT_drawArrow()
     else if(current_symbol==4)code_str_raw+=";W4";
     else if(current_symbol==5)code_str_raw+=";W5";
     else if(current_symbol==6)code_str_raw+=";W6";
-    else if(current_symbol==7)code_str_raw+=";(2";//在遥控器代码的Card_process.cpp里找的到对应的传输协议，因为遥控器没有循环按钮、条件按钮这些
-    else if(current_symbol==8)code_str_raw+=";(3";
-    else if(current_symbol==9)code_str_raw+=";)";
-    else if(current_symbol==10)code_str_raw+=";{";
-    else if(current_symbol==11)code_str_raw+=";}";
-    else if(current_symbol==12)code_str_raw+=";[";
-    else if(current_symbol==13)code_str_raw+=";]";
-    else if(current_symbol==14)code_str_raw+=";<";
-    else if(current_symbol==15)code_str_raw+=";>";
+    else if(current_symbol==7){code_str_raw+=";(2";receive_voice_condition=11;}//在遥控器代码的Card_process.cpp里找的到对应的传输协议，因为遥控器没有循环按钮、条件按钮这些
+    else if(current_symbol==8){code_str_raw+=";(3";receive_voice_condition=11;}
+    else if(current_symbol==9){code_str_raw+=";)";receive_voice_condition=12;}
+    else if(current_symbol==10){code_str_raw+=";{";receive_voice_condition=9;}
+    else if(current_symbol==11){code_str_raw+=";}";receive_voice_condition=10;}
+    else if(current_symbol==12){code_str_raw+=";[";receive_voice_condition=9;}
+    else if(current_symbol==13){code_str_raw+=";]";receive_voice_condition=10;}
+    else if(current_symbol==14){code_str_raw+=";<";receive_voice_condition=9;}
+    else if(current_symbol==15){code_str_raw+=";>";receive_voice_condition=10;}
     code_str_raw_item_counter++;
     Serial.println(code_str_raw);
     for(int i=0;i<18;i++){
@@ -294,7 +294,7 @@ void TFT_drawArrow()
       if(temp_symbol!=0&&i<4)DrawSymbol(30*i,50,temp_symbol);//显示symbolX.bmp
     }
     symbol_counter++;
-    receive_voice_condition=1;
+    if(current_symbol<=6)receive_voice_condition=1;
     receive_voice_flag=true;
     symbol_add_or_delete=0;
   }else if(current_symbol==19&&symbol_add_or_delete==2&&symbol_counter>=1){

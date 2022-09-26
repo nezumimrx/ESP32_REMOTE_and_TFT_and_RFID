@@ -42,6 +42,8 @@ extern boolean receive_condition_type3;//在上位机也就是控制器接收到
 extern String code_str_condition_type3;//存储type3符号表示的条件语句, type3 目前为||中的语句
 extern boolean instant_stop;
 extern boolean start_cypher;
+extern boolean start_cypher_pass_on_start;//有时候即使start_cypher运行完了，但是小车还在因为惯性移动，那时候走到卡片上也应该算，所以这里加1秒后续读取卡片的有效时间
+extern int start_cypher_pass_on_timer;//有时候即使start_cypher运行完了，但是小车还在因为惯性移动，那时候走到卡片上也应该算，所以这里加1秒后续读取卡片的有效时间
 
 extern void Code_Process_TASK(void *parameters);
 extern TaskHandle_t Code_Process_Handle;
