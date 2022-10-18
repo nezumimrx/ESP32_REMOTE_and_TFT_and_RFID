@@ -111,10 +111,11 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
         }else if(*received_data.x=='M'){
             if(received_data.y==1){//接收到切换模式的指令
                 mode_switch_condition++;
-                if(mode_switch_condition>=3)mode_switch_condition=0;
+                if(mode_switch_condition>=4)mode_switch_condition=0;
                 if(mode_switch_condition==0){receive_voice_flag=true;receive_voice_condition=20;cannot_start_cypher=0;survive_time_counter_start=false;}//切换为遥控
                 else if(mode_switch_condition==1){receive_voice_flag=true;receive_voice_condition=21;cannot_start_cypher=0;survive_time_counter_start=false;}//切换为编程
                 else if(mode_switch_condition==2){receive_voice_flag=true;receive_voice_condition=30;survive_mode_intro=false;survive_time_counter=0;survive_fuel=1;survive_collected_points=0;cannot_start_cypher=0;survive_time_counter_start=false;}//切换为生存挑战
+                else if(mode_switch_condition==3){receive_voice_flag=true;receive_voice_condition=89;cannot_start_cypher=0;survive_time_counter_start=false;}//切换为手势交互
             }
         }else if(*received_data.x=='V'){
             if(received_data.y==1){//接收到调节音量的

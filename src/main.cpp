@@ -10,6 +10,7 @@
 #include <SPI.h>
 #include <rfid_funcs.h>
 #include <Code_parse.h>
+#include <Sensor_ir.h>
 
 Preferences pref;
 int volume=15;
@@ -157,6 +158,15 @@ void RFID_TASK(void *parameters)
         start_cypher_pass_on_timer=0;
       }
     }
+
+    if(ir_counter_start==true){
+      ir_counter++;
+      if(ir_counter>=ir_confirm_time_max){
+        ir_counter_start=false;ir_counter=0;
+      }
+    }
+
+    
     vTaskDelay(50 / portTICK_PERIOD_MS);
   }
 }
@@ -227,12 +237,13 @@ void setup()
   rfid_init();
   volume_read_memory();//
   espnow_slave_init();
+  Sensor_ir_init();
   xTaskCreate(RFID_TASK, "RFID_TASK", 10000, NULL, 1, NULL);
   xTaskCreate(Code_Process_TASK, "Code_Process_TASK", 7000, NULL, 2, &Code_Process_Handle);
   xTaskCreate(TFT_TASK, "TFT_TASK", 10000, NULL, 1, &TFT_TASK_Handle);
   //robot_startUp();
 
-  
+
 }
 
 void loop()
@@ -243,19 +254,25 @@ void loop()
   if (connected_with_controller == true)
   {
     connected_funcs();
-    rfid_scan_card();
-    card_process(rfid_block_buffer);
-    if(instant_stop==1){
-      vTaskSuspend(Code_Process_Handle);//先把线程停下来
-      code_str_clean="";//清空执行的程序
-      vTaskResume(Code_Process_Handle);//由于code_str_clean清空以及instant_stop置为1，因此小车必然停下来，再开启线程，空跑完
-      // play voice emergent stop and play emo_stop
-      receive_voice_flag = true;
-      receive_voice_condition = 3; //紧急停止
-      //
-      pwm_stop();//然后把车停下来
-      delay(500);
-      instant_stop=0;
+    if(mode_switch_condition!=3){//非交互模式
+      rfid_scan_card();
+      card_process(rfid_block_buffer);
+      if(instant_stop==1){
+        vTaskSuspend(Code_Process_Handle);//先把线程停下来
+        code_str_clean="";//清空执行的程序
+        vTaskResume(Code_Process_Handle);//由于code_str_clean清空以及instant_stop置为1，因此小车必然停下来，再开启线程，空跑完
+        // play voice emergent stop and play emo_stop
+        receive_voice_flag = true;
+        receive_voice_condition = 3; //紧急停止
+        //
+        pwm_stop();//然后把车停下来
+        delay(500);
+        instant_stop=0;
+      }
+    }
+    if(mode_switch_condition==3){
+      Sensor_ir_read();
+      Sensor_ir_movement();
     }
   }else if(connected_with_controller==false){
     disconnect_funcs();

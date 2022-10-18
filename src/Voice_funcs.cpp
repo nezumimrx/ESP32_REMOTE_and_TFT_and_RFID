@@ -281,6 +281,26 @@ void voice_receive_esp_now_behaviors(){
             random_play_num=130;
         }else if(receive_voice_condition==88){//执行条件命令
             random_play_num=131;
+        }else if(receive_voice_condition==89){//切换为手势交互
+            motor_speed=slow_speed;//速度并不是在发送W协议的时候设置的，而是在一开始切换模式的时候
+            vTaskSuspend(TFT_TASK_Handle);
+            TFT_instant_stop=true;
+            vTaskResume(TFT_TASK_Handle);
+            face_condition=0;
+            remote_or_code_mode=3;
+            random_play_num=random(150,152);//手势交互
+            for(int i=0;i<20;i++)symbol_array[i]=0;
+            code_str_raw="&";
+            code_str_raw_item_counter=0;
+            code_str_clean = "";
+            //把编程状态下的操作紧急停止且不发声音,不能像再ESPNOW_SLAVE.cpp中那样收到'R',O 把start_cypher=0;以及instant_stop=1;因为这样会让main程序里的部分发声。
+            instant_stop=1;
+            vTaskSuspend(Code_Process_Handle);//先把线程停下来
+            code_str_clean="";//清空执行的程序
+            vTaskResume(Code_Process_Handle);//由于code_str_clean清空以及instant_stop置为1，因此小车必然停下来，再开启线程，空跑完
+            pwm_stop();//然后把车停下来
+            vTaskDelay(100/portTICK_PERIOD_MS);
+            instant_stop=0;
         }
 
         play_voice(random_play_num);

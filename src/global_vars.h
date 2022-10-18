@@ -83,4 +83,8 @@ extern int loop_recorded_counter;//用来记录存了几个循环命令触发时
 extern int condition_recorded_cards[3];//用来记录所有存进去的指令，目前上限是3张动作卡
 extern int condition_recorded_counter;//用来记录存了几个条件命令触发时要执行的指令
 
+extern boolean ir_counter_start;
+extern int ir_counter;
+extern int ir_confirm_time_max;
+
 

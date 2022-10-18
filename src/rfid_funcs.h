@@ -1,4 +1,4 @@
-#ifndef _prfid_funcs_H_
+#ifndef _rfid_funcs_H_
 #define _rfid_funcs_H_
 #include <Arduino.h>
 void rfid_init();
